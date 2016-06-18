@@ -51,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">SB Admin v2.0</a>
+                <a class="navbar-brand" href="clients.html">SB Admin v2.0</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -280,7 +280,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="index.html"><i class="fa fa-bar-chart-o fa-fw"></i> Clients<span class="fa arrow"></span></a>
+                            <a href="clients.html"><i class="fa fa-bar-chart-o fa-fw"></i> Clients<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="#">Active<span class="fa arrow"></span></a>
@@ -317,7 +317,7 @@
             </div>
             <!-- /.navbar-static-side -->
         </nav>
-        <div id="page-wrapper">
+        <div id="singleClient">
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h1>
@@ -339,7 +339,104 @@
                 </div>
             </div>
 
+            <!--modal-->
+            <!-- Button trigger modal -->
+            <button class="btn btn-primary" data-toggle="modal" data-target="#notesModal">
+                Add Notes
+            </button>
 
+            <!-- Modal -->
+            <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                Session Notes
+                            </h4>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+
+                            <form id="noteForm" role="form">
+                                <div class="form-group">
+                                    <label for="date">Date:</label>
+                                    <input type="date" class="form-control" id="date" placeholder="mm/dd/yy" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="title">Title:</label>
+                                    <input type="text" class="form-control" id="title" placeholder="Title" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="keywords">Keywords:</label>
+                                    <input type="text" class="form-control" id="keywords" placeholder="Keywords" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">Notes:</label>
+                                    <textarea rows='5' class="form-control" id="notes" placeholder="Notes"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label for="paymentStatus">Paid:</label>
+                                    <select data-placeholder=" " class="form-control chosen-select">
+                                        <option value="">
+                                        </option>" />
+                                        <option value="Yes">
+                                            Yes
+                                        </option>" />
+                                        <option value="No">
+                                            No
+                                        </option>" />
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="datePaid">Date Paid:</label>
+                                    <input type="date" class="form-control" id="datePaid" placeholder="mm/dd/yy" />
+                                </div>
+                                <div class="input-group">
+                                    <label for="paymentSource">Payment Source:</label>
+                                    <select data-placeholder=" " class="form-control chosen-select">
+                                        <option value="">
+                                        </option>" />
+                                        <option value="Paypal">
+                                            Paypal
+                                        </option>" />
+                                        <option value="Bitcoin">
+                                            Bitcoin
+                                        </option>" />
+                                        <option value="Bank Transfer">
+                                            Bank Transfer
+                                        </option>" />
+                                        <option value="Cash">
+                                            Cash
+                                        </option>" />
+                                        <option value="Check">
+                                            Check
+                                        </option>" />
+                                    </select>
+                                </div>
+                                <button type="submit" id="addNote" class="btn btn-default">Add Notes</button>
+
+
+                            </form>
+
+
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/modal-->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -415,28 +512,29 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+        </div>
 
-            <!-- jQuery -->
-            <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <!-- jQuery -->
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
 
-            <!-- Bootstrap Core JavaScript -->
-            <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-            <!-- Metis Menu Plugin JavaScript -->
-            <script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
 
-            <!-- DataTables JavaScript -->
-            <script src="../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-            <script src="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+        <!-- DataTables JavaScript -->
+        <script src="../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+        <script src="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
-            <!-- Custom Theme JavaScript -->
-            <script src="../dist/js/sb-admin-2.js"></script>
+        <!-- Custom Theme JavaScript -->
+        <script src="../dist/js/sb-admin-2.js"></script>
 
-            <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-            <script>
-                $(document).ready(function () {
-                    $('#dataTables-example').DataTable({
-                        responsive: true
-                    });
+        <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+        <script>
+            $(document).ready(function () {
+                $('#dataTables-example').DataTable({
+                    responsive: true
                 });
-            </script>
+            });
+        </script>
