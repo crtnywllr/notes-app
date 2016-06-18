@@ -2,6 +2,7 @@ var clientTable;
 var notesTable;
 
 var notesFromDatabase = [];
+var clientList = [];
 
 var notes;
 var totalSessions;
@@ -10,9 +11,26 @@ var lastSession;
 $(document).ready(function () {
     //Sends all notes to array for filtering later
     database.ref("notes/").on("child_added", function (snap) {
-        notesFromDatabase.push(snap.val());
+        notesFromDatabase.push({
+            note: snap.val(),
+            id: snap.getKey()
+        });
         //console.log(notesFromDatabase);
     })
+
+    //Sends all clients to array for filtering later
+    database.ref("clients/").on("child_added", function (snap) {
+        clientList.push({
+            client: snap.val(),
+            id: snap.getKey()
+        });
+        console.log(clientList);
+        updateClientTable();
+    })
+
+    //Initial update of client table
+
+
 
     //Initial display
     $("#singleClient").hide();
@@ -54,20 +72,7 @@ $(document).ready(function () {
 
     //--------Managing Clients --------------
 
-    //Add client to database
-    function addClient(name, email, dob, age, location, occupation, payMethod, rate) {
-        database.ref("clients/").push({
-            name: name,
-            email: email,
-            dob: dob,
-            age: age,
-            location: location,
-            occupation: occupation,
-            payMethod: payMethod,
-            rate: rate,
-            active: true
-        });
-    };
+
 
     //Handle clientForm submission
     $("#clientForm").submit(function (event) {
@@ -84,52 +89,44 @@ $(document).ready(function () {
         addClient(name, email, dob, age, location, occupation, payMethod, rate);
         //Update UI
         $("#clientModal").modal("hide");
-        //$('#clientForm').empty();
-
+        //$("#clientForm").empty();
     });
+
+    //Add client to database
+    function addClient(name, email, dob, age, location, occupation, payMethod, rate) {
+        database.ref("clients/").push({
+            name: name,
+            email: email,
+            dob: dob,
+            age: age,
+            location: location,
+            occupation: occupation,
+            payMethod: payMethod,
+            rate: rate,
+            active: true
+        });
+        //Update client table after add
+        updateClientTable();
+    };
 
     //Update clients display
-    database.ref("clients/").on("child_added", function (snapshot) {
-        key = (snapshot.getKey());
-        clientTable.row.add([snapshot.val().name, key, "Yes", "", "", snapshot.val().payMethod, snapshot.val().rate])
-            .draw();
-        /*database.ref("notes/").on("value", function (snap) {
-    var snapKey = snap.getKey(); //notes
-    console.log(snapKey)
-    console.log("key ", snap.val().key)
-    console.log(key)
-    if (snap.exists() && (snap.val().key === key)) {
-        database.ref("notes/").on("child_added", function (snap) {
-            console.log(snap.val().key)
-            console.log(key)
-            var sessions = [];
-            sessions.push(snap.val())
-            totalSessions = sessions.length || null;
-            lastSession = snap.val().date || null;
-            dataCapture(totalSessions, lastSession)
+    function updateClientTable() {
+        console.log(clientList);
+        clientTable.rows().remove().draw();
+        clientList.forEach(function (client) {
+            console.log("client ", client)
+            var id = client.id;
+            var client = client.client;
+            clientTable.row.add([client.name, id, "Yes", "", "", client.payMethod, client.rate]).draw();
         })
-
-        function dataCapture(totalSessions, lastSession) {
-            console.log(totalSessions);
-            console.log(lastSession);
-            clientTable.row().data([snapshot.val().name, key, "Yes", lastSession, totalSessions, snapshot.val().payMethod, snapshot.val().rate])
-                .draw();
-        }
-    } else {
-        //console.log("else")
-        clientTable.row.add([snapshot.val().name, key, "Yes", "", "", snapshot.val().payMethod, snapshot.val().rate])
-            .draw();
     }
-});*/
-    });
-
 
     //Navigate to single client
     $("#allClientsTable tbody").on("click", "a", function (e) {
         e.preventDefault();
         //Set var to clientId, send id to addNote button so it can be included with notes
         var clientKey = $(this).attr("value");
-        $('#addNote').attr("value", clientKey);
+        $("#addNote").attr("value", clientKey);
         var clientName = $(this).attr("name")
         $("#clientNameDisplay").text(clientName);
         //Send id to display function for use in filtering notes
@@ -187,12 +184,12 @@ $(document).ready(function () {
     function singleClientDisplay(key) {
         //console.log(key)
         var currentNotes = notesFromDatabase.filter(function (note) {
-            return (note.key === key)
+            return (note.note.key === key)
         })
         notesTable.rows().remove().draw();
         currentNotes.forEach(function (note) {
             //console.log(note.title)
-            var details = [note.title, note.date, note.keywords, note.paid, (note.datePaid || null)]
+            var details = [note.note.title, note.note.date, note.note.keywords, note.note.paid, (note.note.datePaid || null)]
             notesTable.row.add(details).draw();
         })
     };
@@ -208,7 +205,7 @@ $(document).ready(function () {
         } else {
             console.log("key2", currentKey)
             var currentNotes = notesFromDatabase.filter(function (note) {
-                return (note.key === key)
+                return (note.note.key === key)
             })
             if (currentNotes.length === 0) {
                 //console.log("key3", key)
@@ -218,8 +215,8 @@ $(document).ready(function () {
                 console.log("key4", currentKey)
                 var i = (currentNotes.length - 1)
                     //console.log(i)
-                $("#noteTitle").html(currentNotes[i].title || null)
-                $("#noteContent").html(currentNotes[i].notes || "No notes added yet.")
+                $("#noteTitle").html(currentNotes[i].note.title || null)
+                $("#noteContent").html(currentNotes[i].note.notes || "No notes added yet.")
                     //scroll through notes array
                     //!!!!scroll issue when # notes < the prev one viewed
                 $("#decrement").click(function () {
@@ -234,8 +231,8 @@ $(document).ready(function () {
                     } else if (i > 0) {
                         //console.log("decrement ", currentNotes)
                         i--;
-                        $("#noteTitle").html(decNotes[i].title)
-                        $("#noteContent").html(decNotes[i].notes)
+                        $("#noteTitle").html(decNotes[i].note.title)
+                        $("#noteContent").html(decNotes[i].note.notes)
                     }
                 });
                 $("#increment").click(function () {
@@ -245,24 +242,24 @@ $(document).ready(function () {
                     } else if (i < (currentNotes.length - 1)) {
                         //console.log("increment ", currentNotes)
                         i++;
-                        $("#noteTitle").html(currentNotes[i].title)
-                        $("#noteContent").html(currentNotes[i].notes)
+                        $("#noteTitle").html(currentNotes[i.note].title)
+                        $("#noteContent").html(currentNotes[i].note.notes)
                     }
                 });
                 //change display on click
                 //!!!!!need way to make the click local to link, not whole row
-                $('#notesTable tbody').on('click', 'tr', function () {
+                $("#notesTable tbody").on("click", "tr", function () {
                     //get table row data
                     var data = notesTable.row(this).data();
                     var title = data[0];
                     var keywords = data[2];
                     //compare data to each note in array
                     currentNotes.forEach(function (note) {
-                        if (note.title === title && note.keywords === keywords) {
+                        if (note.note.title === title && note.note.keywords === keywords) {
                             //if data matches, find index of note and display content
                             i = ($.inArray(note, currentNotes))
-                            $("#noteTitle").html(currentNotes[i].title)
-                            $("#noteContent").html(currentNotes[i].notes)
+                            $("#noteTitle").html(currentNotes[i].note.title)
+                            $("#noteContent").html(currentNotes[i].note.notes)
                         }
                     });
                 });
