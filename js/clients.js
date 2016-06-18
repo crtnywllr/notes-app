@@ -15,7 +15,6 @@ $(document).ready(function () {
             note: snap.val(),
             id: snap.getKey()
         });
-        //console.log(notesFromDatabase);
     })
 
     //Sends all clients to array for filtering later
@@ -24,13 +23,8 @@ $(document).ready(function () {
             client: snap.val(),
             id: snap.getKey()
         });
-        console.log(clientList);
         updateClientTable();
     })
-
-    //Initial update of client table
-
-
 
     //Initial display
     $("#singleClient").hide();
@@ -72,8 +66,6 @@ $(document).ready(function () {
 
     //--------Managing Clients --------------
 
-
-
     //Handle clientForm submission
     $("#clientForm").submit(function (event) {
         event.preventDefault();
@@ -111,14 +103,45 @@ $(document).ready(function () {
 
     //Update clients display
     function updateClientTable() {
-        console.log(clientList);
+        //console.log(clientList);
         clientTable.rows().remove().draw();
         clientList.forEach(function (client) {
-            console.log("client ", client)
+            //console.log("client ", client)
             var id = client.id;
+            var noteData = getData(id);
             var client = client.client;
-            clientTable.row.add([client.name, id, "Yes", "", "", client.payMethod, client.rate]).draw();
+            console.log(noteData)
+            clientTable.row.add([client.name, id, "Yes", noteData.lastSession, noteData.totalSessions, client.payMethod, client.rate]).draw();
         })
+    }
+
+    //Get lastSession and totalSessions for client table
+    function getData(id) {
+        //console.log("id", id)
+        var data = notesFromDatabase.filter(function (note) {
+            //console.log("note", note.note.key)
+            //console.log("id", id)
+            return note.note.key === id
+        })
+        if (data.length === 0) {
+            var noteData = {
+                lastSession: "No recorded sessions",
+                totalSessions: 0
+            }
+            return noteData;
+        } else {
+            //console.log("data", data)
+            var totalSessions = data.length;
+            var lastNote = data.pop();
+            //console.log("lastNote", lastNote);
+            var lastSession = lastNote.note.date;
+            var noteData = {
+                lastSession: lastSession,
+                totalSessions: totalSessions
+            };
+            return noteData;
+        }
+
     }
 
     //Navigate to single client
@@ -178,6 +201,7 @@ $(document).ready(function () {
         });
         singleClientDisplay(key);
         noteDisplay(key);
+        updateClientTable();
     }
 
     //Display notes in table
@@ -197,13 +221,13 @@ $(document).ready(function () {
     //Display note content in slideshow
     function noteDisplay(key) {
         var currentKey = key
-        console.log("key1", currentKey)
+            //console.log("key1", currentKey)
         if (notesFromDatabase.length === 0) {
             $("#noteTitle").html(null)
             $("#noteContent").html("No notes added yet.")
 
         } else {
-            console.log("key2", currentKey)
+            //console.log("key2", currentKey)
             var currentNotes = notesFromDatabase.filter(function (note) {
                 return (note.note.key === key)
             })
@@ -212,7 +236,7 @@ $(document).ready(function () {
                 $("#noteTitle").html(null)
                 $("#noteContent").html("No notes added yet.")
             } else {
-                console.log("key4", currentKey)
+                //console.log("key4", currentKey)
                 var i = (currentNotes.length - 1)
                     //console.log(i)
                 $("#noteTitle").html(currentNotes[i].note.title || null)
@@ -220,8 +244,8 @@ $(document).ready(function () {
                     //scroll through notes array
                     //!!!!scroll issue when # notes < the prev one viewed
                 $("#decrement").click(function () {
-                    console.log("decKey", key);
-                    console.log("decKey2", currentKey);
+                    //console.log("decKey", key);
+                    //console.log("decKey2", currentKey);
                     var decNotes = currentNotes.filter(function (note) {
                         return note.key == key
                     });
@@ -236,7 +260,7 @@ $(document).ready(function () {
                     }
                 });
                 $("#increment").click(function () {
-                    console.log(currentNotes)
+                    //console.log(currentNotes)
                     if (currentNotes.length === 0) {
                         return
                     } else if (i < (currentNotes.length - 1)) {
