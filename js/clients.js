@@ -67,10 +67,10 @@ $(document).ready(function () {
     //Initialize table for payments
     var paymentTable = $("#paymentTable").DataTable({
         responsive: true,
-        /*"columnDefs": [
+        "columnDefs": [
             {
                 "render": function (data, type, row) {
-                    return "<a class='noteLink' href='#client' value=" + row[1] + ">" + row[0] + "</a>";
+                    return "<a class='clientLink' href='' value=" + row[1] + " name= " + row[0] + ">" + row[0] + "</a>";
                 },
                 "targets": 0
             },
@@ -78,19 +78,21 @@ $(document).ready(function () {
                 "visible": false,
                 "targets": [1]
             }
-        ]*/
+        ]
     });
 
     //------------Navigation------------
-    //Navigate to single client
-    $("#allClientsTable tbody").on("click", "a", function (e) {
+    //Navigate to single client from clients
+    $("tbody").on("click", ".clientLink", function (e) {
         e.preventDefault();
-        //Set var to clientId, send id to addNote button so it can be included with notes
+        //send id and name to addNote button so it can be included with notes
         var clientKey = $(this).attr("value");
         $("#addNote").attr("value", clientKey);
+        $("#decrement").attr("value", clientKey);
+        $("#increment").attr("value", clientKey);
         var clientName = $(this).attr("name")
-            //console.log(clientName);
         $("#addNote").attr("name", clientName);
+        //Show name of client on notes page
         $("#clientNameDisplay").text(clientName);
         //Send id to display function for use in filtering notes
         singleClientDisplay(clientKey);
@@ -284,31 +286,32 @@ $(document).ready(function () {
                     //scroll through notes array
                     //!!!!scroll issue when # notes < the prev one viewed
                 $("#decrement").click(function () {
-                    //console.log("decKey", key);
-                    //console.log("decKey2", currentKey);
-                    var decNotes = currentNotes.filter(function (note) {
-                        return note.key == key
+                    var key = $("#decrement").attr("value");
+                    var currentNotes = notesFromDatabase.filter(function (note) {
+                        return note.note.key == key
                     });
-                    //console.log("decNotes", decNotes)
-                    if (decNotes.length === 0) {
+                    if (currentNotes.length === 0) {
                         return;
                     } else if (i > 0) {
                         //console.log("decrement ", currentNotes)
                         i--;
-                        $("#noteTitle").html(decNotes[i].note.title)
-                        $("#noteContent").html(decNotes[i].note.notes)
+                        $("#noteTitle").html(currentNotes[i].note.title)
+                        $("#noteContent").html(currentNotes[i].note.notes)
                     }
                 });
                 $("#increment").click(function () {
-                    //console.log(currentNotes)
+                    var key = $("#decrement").attr("value");
+                    var currentNotes = notesFromDatabase.filter(function (note) {
+                        return note.note.key == key
+                    });
                     if (currentNotes.length === 0) {
-                        return
+                        return;
                     } else if (i < (currentNotes.length - 1)) {
-                        //console.log("increment ", currentNotes)
                         i++;
-                        $("#noteTitle").html(currentNotes[i.note].title)
+                        $("#noteTitle").html(currentNotes[i].note.title)
                         $("#noteContent").html(currentNotes[i].note.notes)
                     }
+
                 });
                 //change display on click
                 //!!!!!need way to make the click local to link, not whole row
@@ -330,17 +333,18 @@ $(document).ready(function () {
             }
         }
     };
+
     //------------Managing Payments -------------
     //Display payments in table
     function displayPayments() {
-        console.log(notesFromDatabase);
+        //console.log(notesFromDatabase);
         paymentTable.rows().remove().draw();
         if (notesFromDatabase.length === 0) {
             return;
         } else {
             notesFromDatabase.forEach(function (note) {
                 var note = note.note
-                var payment = [note.clientName, note.title, note.date, note.paid, (note.datePaid || null), (note.paySource || null), (note.amount || null)]
+                var payment = [note.clientName, note.key, note.title, note.date, note.paid, (note.datePaid || null), (note.paySource || null), (note.amount || null)]
                 paymentTable.row.add(payment).draw();
             })
         }
