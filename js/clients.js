@@ -1,12 +1,10 @@
 var clientTable;
 var notesTable;
+var paymentTable;
 
 var notesFromDatabase = [];
 var clientList = [];
 
-var notes;
-var totalSessions;
-var lastSession;
 
 $(document).ready(function () {
     //Sends all notes to array for filtering later
@@ -15,6 +13,7 @@ $(document).ready(function () {
             note: snap.val(),
             id: snap.getKey()
         });
+        displayPayments();
     })
 
     //Sends all clients to array for filtering later
@@ -28,6 +27,7 @@ $(document).ready(function () {
 
     //Initial display
     $("#singleClient").hide();
+    $("#payments").hide();
     $("#allClients").show();
 
     //Initialize table of all clients
@@ -63,6 +63,59 @@ $(document).ready(function () {
             }
         ]*/
     });
+
+    //Initialize table for payments
+    var paymentTable = $("#paymentTable").DataTable({
+        responsive: true,
+        /*"columnDefs": [
+            {
+                "render": function (data, type, row) {
+                    return "<a class='noteLink' href='#client' value=" + row[1] + ">" + row[0] + "</a>";
+                },
+                "targets": 0
+            },
+            {
+                "visible": false,
+                "targets": [1]
+            }
+        ]*/
+    });
+
+    //------------Navigation------------
+    //Navigate to single client
+    $("#allClientsTable tbody").on("click", "a", function (e) {
+        e.preventDefault();
+        //Set var to clientId, send id to addNote button so it can be included with notes
+        var clientKey = $(this).attr("value");
+        $("#addNote").attr("value", clientKey);
+        var clientName = $(this).attr("name")
+            //console.log(clientName);
+        $("#addNote").attr("name", clientName);
+        $("#clientNameDisplay").text(clientName);
+        //Send id to display function for use in filtering notes
+        singleClientDisplay(clientKey);
+        noteDisplay(clientKey);
+        //Update UI
+        $("#allClients").hide();
+        $("#payments").hide();
+        $("#singleClient").show();
+    });
+
+    //Navigate to all clients
+    $(".showClients").on("click", function (e) {
+        e.preventDefault();
+        $("#singleClient").hide();
+        $("#payments").hide();
+        $("#allClients").show();
+    })
+
+    //Navigate to payments
+    $("#paymentShow").on("click", function (e) {
+        e.preventDefault();
+        $("#singleClient").hide();
+        $("#allClients").hide();
+        $("#payments").show();
+    })
 
     //--------Managing Clients --------------
 
@@ -108,32 +161,30 @@ $(document).ready(function () {
         clientList.forEach(function (client) {
             //console.log("client ", client)
             var id = client.id;
-            var noteData = getData(id);
             var client = client.client;
-            console.log(noteData)
+            //get data from notes array to fill in table
+            var noteData = getData(id);
             clientTable.row.add([client.name, id, "Yes", noteData.lastSession, noteData.totalSessions, client.payMethod, client.rate]).draw();
         })
     }
 
     //Get lastSession and totalSessions for client table
     function getData(id) {
-        //console.log("id", id)
         var data = notesFromDatabase.filter(function (note) {
-            //console.log("note", note.note.key)
-            //console.log("id", id)
             return note.note.key === id
         })
         if (data.length === 0) {
+            //If no notes have been added, display message to user
             var noteData = {
                 lastSession: "No recorded sessions",
                 totalSessions: 0
             }
             return noteData;
         } else {
-            //console.log("data", data)
+            //find and return lastSession and totalSessions
             var totalSessions = data.length;
+            //!!!!!!!!may eventually want to sort by date rather than just taking last added
             var lastNote = data.pop();
-            //console.log("lastNote", lastNote);
             var lastSession = lastNote.note.date;
             var noteData = {
                 lastSession: lastSession,
@@ -141,31 +192,7 @@ $(document).ready(function () {
             };
             return noteData;
         }
-
     }
-
-    //Navigate to single client
-    $("#allClientsTable tbody").on("click", "a", function (e) {
-        e.preventDefault();
-        //Set var to clientId, send id to addNote button so it can be included with notes
-        var clientKey = $(this).attr("value");
-        $("#addNote").attr("value", clientKey);
-        var clientName = $(this).attr("name")
-        $("#clientNameDisplay").text(clientName);
-        //Send id to display function for use in filtering notes
-        singleClientDisplay(clientKey);
-        noteDisplay(clientKey);
-        //Update UI
-        $("#allClients").hide();
-        $("#singleClient").show();
-    });
-
-    //Navigate to all clients
-    $("#showClients").on("click", function (e) {
-        e.preventDefault();
-        $("#singleClient").hide();
-        $("#allClients").show();
-    })
 
     // ---------------- Managing Notes ------------
 
@@ -173,46 +200,59 @@ $(document).ready(function () {
     $("#noteForm").submit(function (event) {
         event.preventDefault();
         var key = $("#addNote").attr("value");
-        //console.log(key);
+        var clientName = $("#addNote").attr("name");
+        //console.log(clientName);
         var date = $("#date").val();
         var title = $("#title").val();
         var keywords = $("#keywords").val() || null;
         var notes = $("#notes").val();
         var paid = $("#paid").val();
         var datePaid = $("#datePaid").val() || null;
+        var amount = $("#amount").val() || null;
         var paySource = $("#paySource").val() || null;
         //Send info to be added to database
-        addNotes(key, date, title, keywords, notes, paid, datePaid, paySource);
-        //Update UI
+        addNotes(key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
+        console.log("1", clientName)
+            //Update UI
         $("#notesModal").modal("hide");
     });
 
     //Add notes to database
-    function addNotes(key, date, title, keywords, notes, paid, datePaid, paySource) {
+    function addNotes(key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource) {
+        console.log("2", clientName)
         database.ref("notes/").push({
             key: key,
+            clientName: clientName,
             date: date,
             title: title,
             keywords: keywords,
             notes: notes,
             paid: paid,
             datePaid: datePaid,
+            amount: amount,
             paySource: paySource
         });
+        //add new note to table
         singleClientDisplay(key);
+        //change noteDisplay to display added note
         noteDisplay(key);
+        //update # of sessions and last session after note add
         updateClientTable();
+        //update payment table
+        displayPayments();
     }
 
     //Display notes in table
     function singleClientDisplay(key) {
-        //console.log(key)
+        //match notes to client by key
         var currentNotes = notesFromDatabase.filter(function (note) {
-            return (note.note.key === key)
-        })
+                return (note.note.key === key)
+            })
+            //remove old data
+            //!!!!!!!eventually want fix that doesn't require wiping each time
         notesTable.rows().remove().draw();
+        //loop through array and add updated data
         currentNotes.forEach(function (note) {
-            //console.log(note.title)
             var details = [note.note.title, note.note.date, note.note.keywords, note.note.paid, (note.note.datePaid || null)]
             notesTable.row.add(details).draw();
         })
@@ -290,11 +330,27 @@ $(document).ready(function () {
             }
         }
     };
+    //------------Managing Payments -------------
+    //Display payments in table
+    function displayPayments() {
+        console.log(notesFromDatabase);
+        paymentTable.rows().remove().draw();
+        if (notesFromDatabase.length === 0) {
+            return;
+        } else {
+            notesFromDatabase.forEach(function (note) {
+                var note = note.note
+                var payment = [note.clientName, note.title, note.date, note.paid, (note.datePaid || null), (note.paySource || null), (note.amount || null)]
+                paymentTable.row.add(payment).draw();
+            })
+        }
+    }
+
+    //end of document.ready
 });
 
 
 
-//Display payments in table
 
 //Delete client
 
@@ -303,3 +359,5 @@ $(document).ready(function () {
 //Delete note
 
 //Edit note details
+
+//Create client profile
