@@ -1,0 +1,258 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    /*The box-sizing property is used to tell the browser what the sizing properties (width and height) should include border-box.*/
+    box-sizing: border-box;
+    /*reset Chrome user agent styles*/
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-before: 0px;
+    -webkit-padding-after: 0px;
+    -webkit-padding-start: 0px;
+    -webkit-padding-end: 0px;
+}
+
+
+/* General styles */
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 18px;
+    color: #333;
+}
+
+input-group {
+    margin-bottom: 1rem;
+}
+
+.dataTables_filter {
+    text-align: right;
+    margin-right: 2rem;
+}
+
+.table {
+    margin-top: 1rem;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.page-header,
+.panel-heading,
+#clientNameDisplay,
+#clientProfileName {
+    font-family: "Roboto", sans-serif;
+}
+
+.tableHeading .panel-heading {
+    background-color: #ec971f;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color: #f5cb8f;
+}
+
+.even {
+    background-color: #fdf4e8;
+}
+
+.btn-primary {
+    background-color: transparent;
+    border-color: #23527c;
+    color: #23527c;
+}
+
+#allClients .panel,
+#singleClient .panel,
+#payments .panel {
+    background-color: #fefdfc;
+}
+
+
+/* Modal*/
+
+.modal {
+    border-radius: 4px;
+}
+
+.modal-header {
+    background-color: #ec971f;
+    border-radius: 4px;
+}
+
+.modal-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #fafafa;
+}
+
+#addClient,
+#addNote,
+#editNote,
+#payUpdate,
+#editClient {
+    margin-top: 1rem;
+}
+
+
+/* Navigation Styles*/
+
+
+/*------ Clients Table -----*/
+
+#addClientBtn,
+#addNoteBtn {
+    margin-bottom: 2rem;
+}
+
+
+/* Note Display */
+
+#noteTitle {
+    color: #23527C;
+}
+
+#decrement {
+    margin-right: 2rem;
+}
+
+#increment {
+    margin-left: 2rem;
+}
+
+.disabled {
+    color: lightgrey;
+}
+
+pre {
+    font-family: "Open Sans", sans-serif;
+    background-color: #fdf4e8;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    font-size: 1.5rem;
+    padding: 3rem;
+}
+
+
+/* Client Profile */
+
+#editClientProfile {
+    padding-top: 2rem;
+}
+
+.detailsPanel {
+    margin-top: 3rem;
+    border: 2px solid #ddd;
+}
+
+.detailsPanel h3 {
+    font-family: "Roboto" sans-serif;
+}
+
+.detailsHeading {
+    background-color: #ec971f;
+    color: white;
+}
+
+.detailsHeading a {
+    color: white;
+    text-decoration: underline;
+}
+
+#clientDetails li,
+#clientProfileHistory li {
+    margin-top: 1rem;
+}
+
+
+/*Info sidebar*/
+
+.extraInfo {
+    border: 2px solid #ddd;
+    margin-top: 3rem;
+}
+
+.history {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 2rem;
+}
+
+.history h3 {
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-family: "Roboto", sans-serif;
+    padding: 1rem;
+    text-align: center;
+}
+
+.stickyPanel {
+    margin-top: 2rem;
+    text-align: center;
+    background-color: #ec971f;
+    padding: 0.45rem;
+    color: white;
+}
+
+.stickyPanel .panel-heading {
+    background-color: transparent;
+}
+
+.stickyPanel a {
+    color: white;
+    font-family: "Roboto", sans-serif;
+    font-size: 2rem;
+    text-decoration: none;
+}
+
+.stickyNote {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+
+/*Delete Panel*/
+
+.deleteClientPanel {
+    margin-left: 2rem;
+    margin-top: -5rem;
+    border-color: #23527c;
+}
+
+.deleteClientPanel > .panel-heading {
+    background-color: transparent;
+    border-color: transparent;
+    color: #23527c;
+}
+
+.deleteClientPanel .panel-title {
+    font-size: 2rem;
+}
+
+.deleteClientPanel .btn {
+    font-size: 1.55rem;
+}
+
+#deleteClient {
+    background-color: #ec971f;
+    color: white;
+}
+
+
+/* Payments Table */
+
+
+/* -------------------------------------
+place all the desktop styles above this line
+Responsive styles
+(the very last module in the CSS, contains all the media queries and it is dealing with the compatibility with mobiles and tablets)
+place all the mobile tables styles bellow this line
+*/

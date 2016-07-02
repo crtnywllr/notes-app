@@ -1,16 +1,13 @@
 var clientTable;
 var notesTable;
 var paymentTable;
+var editNoteId;
+var editPaymentId;
 
-var editSubmitOldIds = [];
-var paymentSubmitOldIds = [];
 var sidebar = [];
-
 var notesFromDatabase = [];
 var clientList = [];
 var stickyNoteList = [];
-
-//populating side menu from clientList, generate li's under active ul that have key as id on a
 
 $(document).ready(function () {
     //------------Retrieving data from database --------
@@ -21,7 +18,6 @@ $(document).ready(function () {
             note: snap.val(),
             id: snap.getKey()
         });
-        //console.log(notesFromDatabase);
         displayPayments();
     })
 
@@ -48,7 +44,6 @@ $(document).ready(function () {
     //Listens for updates on clients
     database.ref("clients/").on("child_changed", function (snap) {
         var id = snap.getKey();
-        //console.log(id)
         var clientArray = clientList.filter(function (client) {
             return client.id === id;
         })
@@ -68,14 +63,11 @@ $(document).ready(function () {
     //Listens for removed clients
     database.ref("clients/").on("child_removed", function (snap) {
         var id = snap.getKey();
-        //console.log(id)
         var clientArray = clientList.filter(function (client) {
             return client.id === id;
         })
         var client = clientArray[0];
-        //console.log(note)
         var i = clientList.indexOf(client);
-        //console.log(i)
 
         if (i !== -1) {
             clientList.splice(i, 1);
@@ -85,14 +77,11 @@ $(document).ready(function () {
     //Listens for updates on notes
     database.ref("notes/").on("child_changed", function (snap) {
         var id = snap.getKey();
-        //console.log(id)
         var noteArray = notesFromDatabase.filter(function (note) {
             return note.id === id;
         })
         var note = noteArray[0];
-        //console.log(note)
         var i = notesFromDatabase.indexOf(note);
-        //console.log(i)
 
         if (i !== -1) {
             notesFromDatabase[i] = {
@@ -100,20 +89,16 @@ $(document).ready(function () {
                 id: id
             }
         }
-        //console.log(notesFromDatabase);
     })
 
     //Listens for removed notes
     database.ref("notes/").on("child_removed", function (snap) {
         var id = snap.getKey();
-        //console.log(id)
         var noteArray = notesFromDatabase.filter(function (note) {
             return note.id === id;
         })
         var note = noteArray[0];
-        //console.log(note)
         var i = notesFromDatabase.indexOf(note);
-        //console.log(i)
 
         if (i !== -1) {
             notesFromDatabase.splice(i, 1);
@@ -133,8 +118,8 @@ $(document).ready(function () {
         responsive: true,
         "columnDefs": [
             {
+                "width": "20%",
                 "render": function (data, type, row) {
-                    //console.log(row[0]);
                     return "<a class='clientLink' href='' value='" + row[1] + "' name= '" + row[0] + "'>" + row[0] + "</a>";
                 },
                 "targets": 0
@@ -142,6 +127,10 @@ $(document).ready(function () {
             {
                 "visible": false,
                 "targets": [1]
+            },
+            {
+                "width": "12%",
+                "targets": [4, 5, 6]
             }
         ]
     });
@@ -159,14 +148,14 @@ $(document).ready(function () {
 
             },
             {
-                "targets": [1],
+                "targets": 1,
                 "visible": false
             },
             {
                 "targets": 2,
                 "data": null,
                 "render": function (data, type, row) {
-                    return "<a class='noteLink' href=''>" + row[2] + "</a>";
+                    return "<a class='noteLink' value='" + row[1] + "' href=''>" + row[2] + "</a>";
                 }
             },
             {
@@ -217,8 +206,7 @@ $(document).ready(function () {
         var clientKey = $(this).attr("value");
         $("#addNote").attr("value", clientKey);
         $("#editNote").attr("value", clientKey);
-        $("#decrement").attr("value", clientKey);
-        $("#increment").attr("value", clientKey);
+        $("#noteTitle").attr("value", clientKey);
         var clientName = $(this).attr("name")
         $("#addNote").attr("name", clientName);
         $("#editNote").attr("name", clientName);
@@ -245,7 +233,7 @@ $(document).ready(function () {
     })
 
     //Navigate to payments
-    $("#paymentShow").on("click", function (e) {
+    $(document).on("click", ".paymentShow", function (e) {
         e.preventDefault();
         $("#singleClient").hide();
         $("#allClients").hide();
@@ -265,8 +253,22 @@ $(document).ready(function () {
         singleClientDisplay(key);
         noteDisplay(key);
         $("#clientNameDisplay").text(name);
-        $("#decrement").attr("value", key);
-        $("#increment").attr("value", key);
+        $("#clientNameDisplay").attr("value", key);
+        $("#noteTitle").attr("value", key);
+    })
+    $("#archiveList").on("click", "a", function (e) {
+        e.preventDefault();
+        var key = $(this).attr("id");
+        var name = $(this).text();
+        $("#allClients").hide();
+        $("#payments").hide();
+        $("#clientProfile").hide();
+        $("#singleClient").show();
+        singleClientDisplay(key);
+        noteDisplay(key);
+        $("#clientNameDisplay").text(name);
+        $("#clientNameDisplay").attr("value", key);
+        $("#noteTitle").attr("value", key);
     })
 
     //Navigate to client profile from notes page
@@ -299,8 +301,7 @@ $(document).ready(function () {
         //display clients' notes
         noteDisplay(key);
         //set client key for scrolling through notes
-        $("#decrement").attr("value", key);
-        $("#increment").attr("value", key);
+        $("#noteTitle").attr("value", key);
     })
 
     //--------Managing Clients --------------
@@ -347,7 +348,6 @@ $(document).ready(function () {
         $("#" + id + "").remove();
         clientList.forEach(function (client) {
             var key = client.id;
-            console.log(client)
             var found = $.inArray(key, sidebar)
             if (sidebar.length === 0 || found === -1) {
                 sidebar.push(key);
@@ -358,16 +358,28 @@ $(document).ready(function () {
                 } else {
                     $("#archiveList").append(html);
                 }
-            }
+            } else {
+                if (($("#activeList").find($("#" + key + "")).length > 0) && client.client.status === "Active") {
+                    return;
+                } else if (($("#activeList").find($("#" + key + "")).length === 0) && client.client.status === "Active") {
+                    var html = "";
+                    html += "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
+                    $("#activeList").append(html);
+                } else if (($("#archiveList").find($("#" + key + "")).length > 0) && client.client.status === "Archive") {
+                    return;
+                } else if (($("#archiveList").find($("#" + key + "")).length === 0) && client.client.status === "Archive") {
+                    var html = "";
+                    html += "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
+                    $("#archiveList").append(html);
+                }
+            };
         });
-    }
+    };
 
     //Update clients table display
     function updateClientTable() {
-        //console.log(clientList);
         clientTable.rows().remove().draw();
         clientList.forEach(function (client) {
-            //console.log("client ", client)
             var id = client.id;
             var client = client.client;
             //get data from notes array to fill in table
@@ -378,29 +390,50 @@ $(document).ready(function () {
 
     //Get lastSession and totalSessions for client table
     function getData(id) {
+        var counter = 0;
         var data = notesFromDatabase.filter(function (note) {
             return note.note.key === id
         })
         if (data.length === 0) {
             //If no notes have been added, display message to user
             var noteData = {
+                firstSession: "No recorded sessions",
                 lastSession: "No recorded sessions",
-                totalSessions: 0
+                totalSessions: 0,
+                unpaidSessions: "No",
+                numUnpaid: 0
             }
             return noteData;
         } else {
             //find and return lastSession and totalSessions
             var totalSessions = data.length;
             //!!!!!!!!may eventually want to sort by date rather than just taking last added
+            var unpaidSessions;
+            var firstSession = data[0].note.date;
+
+            //find any unpaid sessions
+            var unpaid = data.filter(function (note) {
+                return (note.note.paid === "No")
+            })
+            if (unpaid.length === 0) {
+                unpaidSessions = "No";
+            } else {
+                counter = unpaid.length;
+                unpaidSessions = "Yes";
+            }
             var lastNote = data.pop();
             var lastSession = lastNote.note.date;
             var noteData = {
+                firstSession: firstSession,
                 lastSession: lastSession,
-                totalSessions: totalSessions
+                totalSessions: totalSessions,
+                unpaidSessions: unpaidSessions,
+                numUnpaid: counter
             };
             return noteData;
         }
     }
+
 
 
     //--------------Managing Client Profile---------
@@ -409,14 +442,20 @@ $(document).ready(function () {
         $("#editClientProfile").attr("value", key)
         clientList.filter(function (client) {
             if (client.id === key) {
-                $("#act").text("Status: " + client.client.status);
-                $("#eml").text("Email: " + client.client.email);
-                $("#loc").text("Location: " + client.client.location);
-                $("#occ").text("Occupation: " + client.client.occupation);
-                $("#DOB").text("Date of Birth: " + client.client.dob);
-                $("#Age").text("Age: " + client.client.age);
-                $("#pay").text("Preferred Payment Method: " + client.client.payMethod);
-                $("#fee").text("Session Rate: " + client.client.rate);
+                $("#act").html("<strong>Status: </strong>" + client.client.status);
+                $("#eml").html("<strong>Email: </strong>" + client.client.email);
+                $("#loc").html("<strong>Location: </strong>" + client.client.location);
+                $("#occ").html("<strong>Occupation: </strong>" + client.client.occupation);
+                $("#DOB").html("<strong>Date of Birth: </strong>" + client.client.dob);
+                $("#Age").html("<strong>Age: </strong>" + client.client.age);
+                $("#pay").html("<strong>Preferred Payment Method: </strong>" + client.client.payMethod);
+                $("#fee").html("<strong>Session Rate: </strong>" + client.client.rate);
+                var noteData = getData(key);
+                var html = "";
+                $("#first").html("<li><strong>First Session: </strong>" + noteData.firstSession + "</li>");
+                $("#last").html("<li><strong>Most Recent Session: </strong>" + noteData.lastSession + "</li>");
+                $("#total").html("<li><strong>Number of Sessions: </strong>" + noteData.totalSessions + "</li>");
+                $("#unpaid").html("<li><strong><a href='' class='paymentShow'>Unpaid Sessions: </a></strong>" + noteData.unpaidSessions + " (" + noteData.numUnpaid + ")</li>");
             } else {
                 return;
             }
@@ -445,9 +484,9 @@ $(document).ready(function () {
         $("#clientEditForm").submit(function (e) {
             e.preventDefault();
             clientEditDetails(id);
-
         })
     });
+
     //set params to send to db
     function clientEditDetails(id) {
         var status = $("#status").val();
@@ -467,24 +506,30 @@ $(document).ready(function () {
 
     //Send edits for client to database
     function editClient(id, status, name, email, dob, age, location, occupation, payMethod, rate) {
-        var updates = {};
-        var editedInfo = {
-            status: status,
-            name: name,
-            email: email,
-            dob: dob,
-            age: age,
-            location: location,
-            occupation: occupation,
-            payMethod: payMethod,
-            rate: rate
-        };
-        updates["clients/" + id] = editedInfo;
-        database.ref().update(updates);
-        //update client table
-        updateClientTable();
-        //update client profile
-        showClientDetails(id);
+        var key = $("#editClientProfile").attr("value");
+        if (id === key) {
+            var updates = {};
+            var editedInfo = {
+                status: status,
+                name: name,
+                email: email,
+                dob: dob,
+                age: age,
+                location: location,
+                occupation: occupation,
+                payMethod: payMethod,
+                rate: rate
+            };
+            updates["clients/" + id] = editedInfo;
+            database.ref().update(updates);
+            //update client table
+            updateClientTable();
+            //update client profile
+            showClientDetails(id);
+            updateSidebar(id);
+        } else {
+            return;
+        }
     }
 
     //delete client
@@ -502,8 +547,8 @@ $(document).ready(function () {
                 } else {
                     return;
                 }
-            })
-        })
+            });
+        });
         updateClientTable();
         updateSidebar(id);
         displayPayments();
@@ -512,24 +557,8 @@ $(document).ready(function () {
         $("#payments").hide();
         $("#clientProfile").hide();
         $("#allClients").show();
-    })
-
-    //Delete Note
-    $('#notesTable tbody').on('click', '#delete', function () {
-        var data = notesTable.row($(this).parents('tr')).data();
-        //console.log(data);
-        id = data[7];
-        key = data[1];
-        database.ref("notes/").child(id).remove();
-        //update client's list of notes
-        singleClientDisplay(key);
-        //update note in slideshow if it was selected
-        noteDisplay();
-        //change number of notes on client table
-        updateClientTable();
-        //change history of notes for payment table
-        displayPayments();
     });
+
 
     // ---------------- Managing Notes ------------
 
@@ -538,7 +567,6 @@ $(document).ready(function () {
         event.preventDefault();
         var key = $("#addNote").attr("value");
         var clientName = $("#addNote").attr("name");
-        //console.log(clientName);
         var date = $("#date").val();
         var title = $("#title").val();
         var keywords = $("#keywords").val() || null;
@@ -549,14 +577,12 @@ $(document).ready(function () {
         var paySource = $("#paySource").val() || null;
         //Send info to be added to database
         addNotes(key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
-        //console.log("1", clientName)
         //Update UI
         $("#notesModal").modal("hide");
     });
 
     //Add notes to database
     function addNotes(key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource) {
-        //console.log("2", clientName)
         database.ref("notes/").push({
             key: key,
             clientName: clientName,
@@ -583,10 +609,10 @@ $(document).ready(function () {
     //select row by clicking button
     $('#notesTable tbody').on('click', '#edit', function () {
         var data = notesTable.row($(this).parents('tr')).data();
-        var id = data[7];
+        editNoteId = data[7];
         //filter notes to return note that was clicked
         var noteToEdit = notesFromDatabase.filter(function (note) {
-            return note.id === id
+            return note.id === editNoteId;
         });
         var n = noteToEdit[0].note;
         var noteId = noteToEdit[0].id
@@ -603,65 +629,59 @@ $(document).ready(function () {
         $("#editForm").submit(function (event) {
             var key = $("#editNote").attr("value");
             var clientName = $("#editNote").attr("name");
-            // console.log("clicked");
             event.preventDefault();
-            //console.log(submitCounter + " " + noteId);
-            sendNoteUpdates(id, key, clientName);
-            //submitCounter++;
+            sendNoteUpdates(noteId, key, clientName);
         });
     });
 
     //Handle editForm submission
     function sendNoteUpdates(id, key, clientName) {
-        var found = $.inArray(id, editSubmitOldIds);
-        if (editSubmitOldIds.length === 0 || found === -1) {
-            var date = $("#editDate").val();
-            var title = $("#editTitle").val();
-            var keywords = $("#editKeywords").val() || null;
-            var notes = $("#editNotes").val();
-            var paid = $("#editPaid").val();
-            var datePaid = $("#editDatePaid").val() || null;
-            var amount = $("#editAmount").val() || null;
-            var paySource = $("#editPaySource").val() || null;
-            //Send info to be added to database
-            editNotes(id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
-            //Update UI
-            $("#editModal").modal("hide");
-            editSubmitOldIds.push(id);
-        }
+        var date = $("#editDate").val();
+        var title = $("#editTitle").val();
+        var keywords = $("#editKeywords").val() || null;
+        var notes = $("#editNotes").val();
+        var paid = $("#editPaid").val();
+        var datePaid = $("#editDatePaid").val() || null;
+        var amount = $("#editAmount").val() || null;
+        var paySource = $("#editPaySource").val() || null;
+        //Send info to be added to database
+        editNotes(id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
+        //Update UI
+        $("#editModal").modal("hide");
     };
 
     //Update notes after edit
     function editNotes(id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource) {
-        var updates = {};
-        var editedInfo = {
-            key: key,
-            clientName: clientName,
-            date: date,
-            title: title,
-            keywords: keywords,
-            notes: notes,
-            paid: paid,
-            datePaid: datePaid,
-            amount: amount,
-            paySource: paySource
-        };
-        updates["notes/" + id] = editedInfo;
-        database.ref().update(updates);
-        //update client table
-        singleClientDisplay(key);
-        //change noteDisplay to display added note
-        noteDisplay(key);
-        //update # of sessions and last session after note add
-        updateClientTable();
-        //update payment table
-        displayPayments();
+        if (id === editNoteId) {
+            var updates = {};
+            var editedInfo = {
+                key: key,
+                clientName: clientName,
+                date: date,
+                title: title,
+                keywords: keywords,
+                notes: notes,
+                paid: paid,
+                datePaid: datePaid,
+                amount: amount,
+                paySource: paySource
+            };
+            updates["notes/" + id] = editedInfo;
+            database.ref().update(updates);
+            //update client table
+            singleClientDisplay(key);
+            //change noteDisplay to display added note
+            noteDisplay(key);
+            //update # of sessions and last session after note add
+            updateClientTable();
+            //update payment table
+            displayPayments();
+        }
     }
 
     //Delete Note
     $('#notesTable tbody').on('click', '#delete', function () {
         var data = notesTable.row($(this).parents('tr')).data();
-        //console.log(data);
         id = data[7];
         key = data[1];
         var item = {};
@@ -695,54 +715,61 @@ $(document).ready(function () {
 
     //Display note content in slideshow
     function noteDisplay(key) {
-        //console.log(key)
         if (notesFromDatabase.length === 0) {
             $("#noteTitle").html(null);
             $("#noteContent").html("No notes added yet.");
 
         } else {
-            //console.log("key2", currentKey)
             var currentNotes = notesFromDatabase.filter(function (note) {
                 return (note.note.key === key)
             });
             if (currentNotes.length === 0) {
-                //console.log("key3", key)
                 $("#noteTitle").html(null);
                 $("#noteContent").html("No notes added yet.");
             } else {
-                //console.log("key4", currentKey)
                 var i = (currentNotes.length - 1);
-                //console.log(i)
-                //console.log(currentNotes[i].note.notes);
-                $("#noteTitle").html(currentNotes[i].note.title || null);
+                $("#noteTitle").html("<i class='fa fa-chevron-left' id='decrement'></i>" +
+                    currentNotes[i].note.title + "<i class='fa fa-chevron-right disabled' id='increment'></i>" || null);
                 $("#noteContent").html(currentNotes[i].note.notes || "No notes added yet.");
                 //scroll through notes array
-                //!!!!scroll issue when # notes < the prev one viewed
-                $("#decrement").click(function () {
-                    var key = $("#decrement").attr("value");
+                $("#noteTitle").on("click", "#decrement", function () {
+                    var key = $("#noteTitle").attr("value");
                     var currentNotes = notesFromDatabase.filter(function (note) {
                         return note.note.key == key;
                     });
                     if (currentNotes.length === 0) {
                         return;
                     } else if (i > 0) {
-                        //console.log("decrement ", currentNotes)
+                        if ($("#decrement").hasClass("disabled")) {
+                            $("#decrement").removeClass("disabled");
+                        }
                         i--;
-                        $("#noteTitle").html(currentNotes[i].note.title);
-                        $("#noteContent").html(currentNotes[i].note.notes);
+                        $("#noteTitle").html("<i class='fa fa-chevron-left' id='decrement'></i>" +
+                            currentNotes[i].note.title + "<i class='fa fa-chevron-right' id='increment'></i>" || null);
+                        $("#noteContent").html(currentNotes[i].note.notes || "No notes added yet.");
+                        if (i === 0) {
+                            $("#decrement").addClass("disabled");
+                        }
                     }
                 });
-                $("#increment").click(function () {
-                    var key = $("#increment").attr("value");
+                $("#noteTitle").on("click", "#increment", function () {
+                    var key = $("#noteTitle").attr("value");
                     var currentNotes = notesFromDatabase.filter(function (note) {
                         return note.note.key == key;
                     });
                     if (currentNotes.length === 0) {
                         return;
                     } else if (i < (currentNotes.length - 1)) {
+                        if ($("#increment").hasClass("disabled")) {
+                            $("#increment").removeClass("disabled");
+                        }
                         i++;
-                        $("#noteTitle").html(currentNotes[i].note.title);
-                        $("#noteContent").html(currentNotes[i].note.notes);
+                        $("#noteTitle").html("<i class='fa fa-chevron-left' id='decrement'></i>" +
+                            currentNotes[i].note.title + "<i class='fa fa-chevron-right' id='increment'></i>" || null);
+                        $("#noteContent").html(currentNotes[i].note.notes || "No notes added yet.");
+                        if (i === (currentNotes.length - 1)) {
+                            $("#increment").addClass("disabled");
+                        }
                     }
 
                 });
@@ -751,7 +778,6 @@ $(document).ready(function () {
                     e.preventDefault();
                     //get table row data
                     var data = notesTable.row($(this).parents("tr")).data();
-                    console.log(data);
                     var title = data[2];
                     var keywords = data[4];
                     //compare data to each note in array
@@ -759,8 +785,9 @@ $(document).ready(function () {
                         if (note.note.title === title && note.note.keywords === keywords) {
                             //if data matches, find index of note and display content
                             i = ($.inArray(note, currentNotes))
-                            $("#noteTitle").html(currentNotes[i].note.title)
-                            $("#noteContent").html(currentNotes[i].note.notes)
+                            $("#noteTitle").html("<i class='fa fa-chevron-left' id='decrement'></i>" +
+                                currentNotes[i].note.title + "<i class='fa fa-chevron-right' id='increment'></i>" || null);
+                            $("#noteContent").html(currentNotes[i].note.notes || "No notes added yet.");
                         }
                     });
                 });
@@ -785,7 +812,6 @@ $(document).ready(function () {
     //display only sticky for that client
     function displayStickyNote(key) {
         var currentSticky = stickyNoteList.filter(function (note) {
-            console.log(note);
             if (stickyNoteList.length === 0) {
                 $(".stickyNote").html("");
             } else {
@@ -800,7 +826,6 @@ $(document).ready(function () {
     //------------Managing Payments -------------
     //Display payments in table
     function displayPayments() {
-        //console.log(notesFromDatabase);
         paymentTable.rows().remove().draw();
         if (notesFromDatabase.length === 0) {
             return;
@@ -819,15 +844,13 @@ $(document).ready(function () {
     //select note to edit
     $("#paymentTable tbody").on("click", "#edit", function () {
         var data = paymentTable.row($(this).parents('tr')).data();
-        //console.log(data);
-        var id = data[4];
-        //console.log(id)
+        editPaymentId = data[4];
         //filter notes to return note that was clicked
         var noteToEdit = notesFromDatabase.filter(function (note) {
-            return note.id === id
+            return note.id === editPaymentId;
         });
         var n = noteToEdit[0].note;
-        var key = n.key;
+        var noteId = noteToEdit[0].id;
         //update placeholders in modal
         $("#updatePaid").val(n.paid);
         $("#updateDatePaid").attr("value", n.datePaid || null);
@@ -836,50 +859,47 @@ $(document).ready(function () {
         //call to handle form submission on click
         $("#paymentForm").submit(function (event) {
             event.preventDefault();
-            sendPaymentUpdates(id, n);
+            sendPaymentUpdates(noteId, n);
         });
     });
 
     //Handle paymentForm submission
     function sendPaymentUpdates(id, n) {
-        var found = $.inArray(id, paymentSubmitOldIds);
-        if (paymentSubmitOldIds.length === 0 || found === -1) {
-            var paid = $("#updatePaid").val();
-            var datePaid = $("#updateDatePaid").val() || "";
-            var amount = $("#updateAmount").val() || "";
-            var paySource = $("#updatePaySource").val() || "";
-            //Send info to be added to database
-            editPayment(id, n, paid, datePaid, amount, paySource);
-            //Update UI
-            $("#payModal").modal("hide");
-            paymentSubmitOldIds.push(id);
-        }
+        var paid = $("#updatePaid").val();
+        var datePaid = $("#updateDatePaid").val() || "";
+        var amount = $("#updateAmount").val() || "";
+        var paySource = $("#updatePaySource").val() || "";
+        //Send info to be added to database
+        editPayment(id, n, paid, datePaid, amount, paySource);
+        //Update UI
+        $("#payModal").modal("hide");
     };
 
     function editPayment(id, n, paid, datePaid, amount, paySource) {
-        console.log(n)
-        var updates = {};
-        var key = n.key
-        var editedInfo = {
-            key: key,
-            clientName: n.clientName,
-            date: n.date,
-            title: n.title,
-            keywords: n.keywords,
-            notes: n.notes,
-            paid: paid,
-            datePaid: datePaid,
-            amount: amount,
-            paySource: paySource
-        };
-        updates["notes/" + id] = editedInfo;
-        database.ref().update(updates);
-        //update all clients table
-        updateClientTable();
-        //update client table
-        singleClientDisplay(key);
-        //update payment table
-        displayPayments();
+        if (id === editPaymentId) {
+            var updates = {};
+            var key = n.key
+            var editedInfo = {
+                key: key,
+                clientName: n.clientName,
+                date: n.date,
+                title: n.title,
+                keywords: n.keywords,
+                notes: n.notes,
+                paid: paid,
+                datePaid: datePaid,
+                amount: amount,
+                paySource: paySource
+            };
+            updates["notes/" + id] = editedInfo;
+            database.ref().update(updates);
+            //update all clients table
+            updateClientTable();
+            //update client table
+            singleClientDisplay(key);
+            //update payment table
+            displayPayments();
+        }
     }
     //end of document.ready
 });

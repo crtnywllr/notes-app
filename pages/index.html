@@ -20,13 +20,19 @@
     <!-- Timeline CSS -->
     <link href="../dist/css/timeline.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
+    <!-- Template CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!--Custom CSS-->
+    <link href="../dist/css/style.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
     <link href="../bower_components/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open Sans|Roboto" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -268,19 +274,8 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
-                            <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </span>
-                            </div>
-                            <!-- /input-group -->
-                        </li>
                         <li>
-                            <a href="clients.html"><i class="fa fa-bar-chart-o fa-fw"></i> Clients<span class="fa arrow"></span></a>
+                            <a href="clients.html"><i class="fa fa-table fa-fw"></i> Clients<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a class="showClients" href="">All</a>
@@ -302,7 +297,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a id="paymentShow" href=""><i class="fa fa-table fa-fw"></i> Payments</a>
+                            <a class="paymentShow" href=""><i class="fa fa-bank fa-fw"></i> Payments</a>
                         </li>
                     </ul>
                 </div>
@@ -314,15 +309,17 @@
             <div id="allClients">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Dashboard</h1>
+                        <h1 class="page-header">Clients</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
                 <!--modal-->
                 <!-- Button trigger modal -->
-                <button class="btn btn-primary" data-toggle="modal" data-target="#clientModal">
-                    Add Client
-                </button>
+                <p id="addClientBtn">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#clientModal">
+                        Add Client
+                    </button>
+                </p>
 
                 <!-- Modal -->
                 <div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -393,7 +390,7 @@
                                         <label for="payRate">Session Rate:</label>
                                         <input type="number" class="form-control" id="rate" value="40" placeholder="Rate" />
                                     </div>
-                                    <button type="submit" id="addClient" class="btn btn-default">Add Client</button>
+                                    <button type="submit" id="addClient" class="btn btn-primary">Add Client</button>
 
 
                                 </form>
@@ -414,9 +411,9 @@
                 <!-- /.row -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Clients
+                        <div class="panel panel-default tableHeading">
+                            <div class="panel-heading ">
+                                All
                             </div>
                             <!-- /.panel-heading -->
                             <div class="panel-body">
@@ -458,30 +455,25 @@
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <div>
-                            <i class="fa fa-chevron-left" id="decrement"></i>
-                            <h1 id="noteTitle"><!--Session title--></h1>
-                            <i class="fa fa-chevron-right" id="increment"></i>
+                            <h2 id="noteTitle"><!--Session title--></h2>
                         </div>
                     </div>
                 </div>
                 <!-- /.col-lg-12 -->
 
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 text-center">
-                        <pre id="noteContent">
-                            <!--The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex!
-
-                            Fox nymphs grab quick-jived waltz. Brick quiz whangs jumpy veldt fox. Bright vixens jump; dozy fowl quack. Quick wafting zephyrs vex bold Jim. Quick zephyrs blow, vexing daft Jim. Sex-charged fop blew my junk TV quiz. How quickly daft jumping zebras vex. Two driven jocks help fax my big quiz. Quick, Baz, get my woven flax jodhpurs! "Now fax quiz Jack! " my brave
-                        -->
-                        </pre>
+                    <div class="col-lg-8 col-lg-offset-2 text-justify">
+                        <pre id="noteContent"></pre>
                     </div>
                 </div>
 
                 <!--modal-->
                 <!-- Button trigger modal -->
-                <button class="btn btn-primary" data-toggle="modal" data-target="#notesModal">
-                    Add Notes
-                </button>
+                <p id="addNoteBtn">
+                    <button id="noteModalToggle" class="btn btn-primary" data-toggle="modal" data-target="#notesModal">
+                        Add Notes
+                    </button>
+                </p>
 
                 <!-- Modal -->
                 <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -560,7 +552,7 @@
                                             </option>" />
                                         </select>
                                     </div>
-                                    <button type="submit" id="addNote" class="btn btn-default">Add Notes</button>
+                                    <button type="submit" id="addNote" class="btn btn-primary">Add Notes</button>
                                 </form>
 
 
@@ -652,7 +644,7 @@
                                             </option>" />
                                         </select>
                                     </div>
-                                    <button type="submit" id="editNote" class="btn btn-default">Submit Changes</button>
+                                    <button type="submit" id="editNote" class="btn btn-primary">Submit Changes</button>
                                 </form>
 
 
@@ -670,14 +662,14 @@
                 <!--/modal-->
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
+                        <div class="panel panel-default tableHeading">
+                            <div class="panel-heading ">
                                 Session Notes
                             </div>
                             <!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="dataTable_wrapper">
-                                    <table class="table table-striped table-bordered table-hover" id="notesTable">
+                                    <table class="table table-striped table-bordered table-hover" id="notesTable" style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <th> </th>
@@ -691,7 +683,7 @@
                                                 <th> </th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="notesTableBody">
                                             <!--added notes go here -->
                                         </tbody>
                                     </table>
@@ -769,7 +761,7 @@
                                         </option>" />
                                     </select>
                                 </div>
-                                <button type="submit" id="payUpdate" class="btn btn-default">Update Payment Info</button>
+                                <button type="submit" id="payUpdate" class="btn btn-primary">Update Payment Info</button>
                             </form>
                         </div>
 
@@ -785,21 +777,21 @@
             <div id="payments">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Tables</h1>
+                        <h1 class="page-header">Payments</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Payments
+                        <div class="panel panel-default tableHeading">
+                            <div class="panel-heading ">
+                                All Payments
                             </div>
                             <!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="dataTable_wrapper">
-                                    <table class="table table-striped table-bordered table-hover" id="paymentTable">
+                                    <table class="table table-striped table-bordered table-hover" id="paymentTable" style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <th> </th>
@@ -912,7 +904,7 @@
                                         <label for="payRateEdit">Session Rate:</label>
                                         <input type="number" class="form-control" id="rateEdit" placeholder="Rate" />
                                     </div>
-                                    <button type="submit" id="editClient" class="btn btn-default">Update Client Details</button>
+                                    <button type="submit" id="editClient" class="btn btn-primary">Update Client Details</button>
 
 
                                 </form>
@@ -931,11 +923,11 @@
                 </div>
                 <!--end modal-->
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
+                    <div class="col-md-6">
+                        <div class="panel detailsPanel">
+                            <div class="panel-heading detailsHeading">
                                 <div class="row">
-                                    <div class="col-md-8"><a href=""><span style="color: white"><h2 id="clientProfileName"></h2></span></a> </div>
+                                    <div class="col-md-8"><a href=""><h2 id="clientProfileName"></h2></a> </div>
 
                                     <div class="col-md-2 pull-right">
                                         <i data-toggle='modal' data-target='#editClientModal' id='editClientProfile' class='fa fa-2x fa-pencil'></i>
@@ -956,15 +948,37 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-md-offset-2">
-                        <div class="col-md-8">Sticky Note</div>
-                        <textarea name="stickyNote" class="stickyNote" cols="30" rows="10"></textarea>
+                    <div class="col-md-3 col-md-offset-2 extraInfo">
+                        <div class="col-xs-12 history">
+                            <h3>Session History</h3>
+                            <ul id="clientProfileHistory">
+                                <li id="first"></li>
+                                <li id="last"></li>
+                                <li id="total"></li>
+                                <li id="unpaid"></li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="panel panel-default stickyPanel col-xs-12">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a href="#" data-target="#collapseTwo" data-toggle="collapse">Sticky Note</a>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" id="collapseTwo">
+                                    <div class="panel-body">
+                                        <h4>Use this space to add personal details you want to remember about the client (e.g. spouse's name, upcoming goal, etc).</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <textarea name="stickyNote" class="stickyNote" cols="30" rows="10"></textarea>
+                        </div>
                     </div>
                 </div>
                 <!--/client details-->
                 <!--delete client -->
                 <div class="row">
-                    <div class="panel panel-default col-md-4">
+                    <div class="panel panel-default deleteClientPanel col-md-4">
                         <div class="panel-heading">
                             <h4 class="panel-title">
                             <a href="#" data-target="#collapseOne" data-toggle="collapse">Delete Client</a>
@@ -974,7 +988,7 @@
                             <div class="panel-body">
                                 <h4>Are you sure? All notes and information for this client will be deleted permanently.</h4>
                                 <div class="row text-center">
-                                    <button class="btn btn-danger" id="deleteClient">Delete</button>
+                                    <button class="btn btn-default" id="deleteClient">Delete</button>
                                     <button class="btn" href="#" data-target="#collapseOne" data-toggle="collapse">Close</button>
                                 </div>
                             </div>
@@ -1016,6 +1030,9 @@
     <!-- DataTables JavaScript -->
     <script src="../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+    <!-- MomentJS -->
+    <script src="../dist/js/moment.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
