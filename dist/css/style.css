@@ -17,7 +17,7 @@
 }
 
 
-/* General styles */
+/* ---General styles--- */
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -29,6 +29,37 @@ input-group {
     margin-bottom: 1rem;
 }
 
+.btn-primary {
+    background-color: transparent;
+    border-color: #23527c;
+    color: #23527c;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+/* Header Font*/
+
+.page-header,
+.panel-heading,
+#clientNameDisplay,
+#clientProfileName {
+    font-family: "Roboto", sans-serif;
+}
+
+
+/* Add Button Spacing*/
+
+#addClientBtn,
+#addNoteBtn {
+    margin-bottom: 2rem;
+}
+
+
+/* ---Tables--- */
+
 .dataTables_filter {
     text-align: right;
     margin-right: 2rem;
@@ -36,17 +67,6 @@ input-group {
 
 .table {
     margin-top: 1rem;
-}
-
-ul {
-    list-style-type: none;
-}
-
-.page-header,
-.panel-heading,
-#clientNameDisplay,
-#clientProfileName {
-    font-family: "Roboto", sans-serif;
 }
 
 .tableHeading .panel-heading {
@@ -63,11 +83,8 @@ ul {
     background-color: #fdf4e8;
 }
 
-.btn-primary {
-    background-color: transparent;
-    border-color: #23527c;
-    color: #23527c;
-}
+
+/* Table panel headers */
 
 #allClients .panel,
 #singleClient .panel,
@@ -76,7 +93,7 @@ ul {
 }
 
 
-/* Modal*/
+/* ---Modal--- */
 
 .modal {
     border-radius: 4px;
@@ -93,6 +110,9 @@ ul {
     color: #fafafa;
 }
 
+
+/* Modal button spacing*/
+
 #addClient,
 #addNote,
 #editNote,
@@ -102,18 +122,7 @@ ul {
 }
 
 
-/* Navigation Styles*/
-
-
-/*------ Clients Table -----*/
-
-#addClientBtn,
-#addNoteBtn {
-    margin-bottom: 2rem;
-}
-
-
-/* Note Display */
+/* ---Note Display--- */
 
 #noteTitle {
     color: #23527C;
@@ -141,11 +150,22 @@ pre {
 }
 
 
-/* Client Profile */
+/* ---Client Profile--- */
 
 #editClientProfile {
     padding-top: 2rem;
 }
+
+
+/*List item spacing*/
+
+#clientDetails li,
+#clientProfileHistory li {
+    margin-top: 1rem;
+}
+
+
+/*Client Details*/
 
 .detailsPanel {
     margin-top: 3rem;
@@ -166,11 +186,6 @@ pre {
     text-decoration: underline;
 }
 
-#clientDetails li,
-#clientProfileHistory li {
-    margin-top: 1rem;
-}
-
 
 /*Info sidebar*/
 
@@ -178,6 +193,9 @@ pre {
     border: 2px solid #ddd;
     margin-top: 3rem;
 }
+
+
+/*Session History*/
 
 .history {
     border-bottom: 2px solid #ddd;
@@ -191,6 +209,9 @@ pre {
     padding: 1rem;
     text-align: center;
 }
+
+
+/*Sticky Note*/
 
 .stickyPanel {
     margin-top: 2rem;
@@ -245,14 +266,3 @@ pre {
     background-color: #ec971f;
     color: white;
 }
-
-
-/* Payments Table */
-
-
-/* -------------------------------------
-place all the desktop styles above this line
-Responsive styles
-(the very last module in the CSS, contains all the media queries and it is dealing with the compatibility with mobiles and tablets)
-place all the mobile tables styles bellow this line
-*/

@@ -3,6 +3,7 @@ var notesTable;
 var paymentTable;
 var editNoteId;
 var editPaymentId;
+var uId;
 
 var sidebar = [];
 var notesFromDatabase = [];
@@ -10,55 +11,88 @@ var clientList = [];
 var stickyNoteList = [];
 
 $(document).ready(function () {
+
+
     //------------Retrieving data from database --------
+
+    //gets uId for current user
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            uId = firebase.auth().currentUser.uid;
+            //console.log(uId);
+            $("#addClientBtn").attr("value", uId);
+            $("#addNoteBtn").attr("value", uId);
+            $("#stickyToggle").attr("value", uId);
+        } else {
+            console.log("no users signed in");
+        }
+    });
 
     //Sends all notes to array for filtering later
     database.ref("notes/").on("child_added", function (snap) {
-        notesFromDatabase.push({
-            note: snap.val(),
-            id: snap.getKey()
-        });
+        var note = snap.val();
+        if (note.uId === uId) {
+            notesFromDatabase.push({
+                note: snap.val(),
+                id: snap.getKey()
+            });
+        } else {
+            return;
+        }
         displayPayments();
-    })
+    });
 
     //Sends all clients to array for filtering later
     database.ref("clients/").on("child_added", function (snap) {
-        var key = snap.getKey()
-        clientList.push({
-            client: snap.val(),
-            id: key
-        });
+        var client = snap.val();
+        if (client.uId === uId) {
+            var key = snap.getKey()
+            clientList.push({
+                client: snap.val(),
+                id: key
+            });
+        } else {
+            return;
+        }
         updateClientTable();
         updateSidebar();
-    })
+    });
 
     //Sends sticky note details to array for filtering later
     database.ref("sticky-note/").on("child_added", function (snap) {
-        var key = snap.getKey()
-        stickyNoteList.push({
-            note: snap.val(),
-            id: key
-        });
-    })
+        var note = snap.val();
+        if (note.uId === uId) {
+            var key = snap.getKey()
+            stickyNoteList.push({
+                note: snap.val(),
+                id: key
+            });
+        } else {
+            return;
+        }
+    });
 
     //Listens for updates on clients
     database.ref("clients/").on("child_changed", function (snap) {
-        var id = snap.getKey();
-        var clientArray = clientList.filter(function (client) {
-            return client.id === id;
-        })
-        var client = clientArray[0];
-        var i = clientList.indexOf(client);
-        //if client is in array, set its properties to new info
-        if (i !== -1) {
-            clientList[i] = {
-                client: snap.val(),
-                id: id
+        var client = snap.val();
+        if (client.uId === uId) {
+            var id = snap.getKey();
+            var clientArray = clientList.filter(function (client) {
+                return client.id === id;
+            });
+            var client = clientArray[0];
+            var i = clientList.indexOf(client);
+            //if client is in array, set its properties to new info
+            if (i !== -1) {
+                clientList[i] = {
+                    client: snap.val(),
+                    id: id
+                }
+                updateClientTable();
+                showClientDetails(id);
             }
-            updateClientTable();
-            showClientDetails(id);
         }
-    })
+    });
 
     //Listens for removed clients
     database.ref("clients/").on("child_removed", function (snap) {
@@ -76,20 +110,23 @@ $(document).ready(function () {
 
     //Listens for updates on notes
     database.ref("notes/").on("child_changed", function (snap) {
-        var id = snap.getKey();
-        var noteArray = notesFromDatabase.filter(function (note) {
-            return note.id === id;
-        })
-        var note = noteArray[0];
-        var i = notesFromDatabase.indexOf(note);
+        var note = snap.val();
+        if (note.uId === uId) {
+            var id = snap.getKey();
+            var noteArray = notesFromDatabase.filter(function (note) {
+                return note.id === id;
+            })
+            var note = noteArray[0];
+            var i = notesFromDatabase.indexOf(note);
 
-        if (i !== -1) {
-            notesFromDatabase[i] = {
-                note: snap.val(),
-                id: id
+            if (i !== -1) {
+                notesFromDatabase[i] = {
+                    note: snap.val(),
+                    id: id
+                }
             }
         }
-    })
+    });
 
     //Listens for removed notes
     database.ref("notes/").on("child_removed", function (snap) {
@@ -309,6 +346,7 @@ $(document).ready(function () {
     //Handle clientForm submission
     $("#clientForm").submit(function (event) {
         event.preventDefault();
+        var uId = $("#addClientBtn").attr("value");
         var name = $("#name").val();
         var email = $("#email").val();
         var dob = $("#dob").val();
@@ -318,15 +356,16 @@ $(document).ready(function () {
         var payMethod = $("#payMethod").val();
         var rate = $("#rate").val();
         //send info to be added to database
-        addClient(name, email, dob, age, location, occupation, payMethod, rate);
+        addClient(uId, name, email, dob, age, location, occupation, payMethod, rate);
         //Update UI
         $("#clientModal").modal("hide");
         //$("#clientForm").empty();
     });
 
     //Add client to database
-    function addClient(name, email, dob, age, location, occupation, payMethod, rate) {
+    function addClient(uId, name, email, dob, age, location, occupation, payMethod, rate) {
         database.ref("clients/").push({
+            uId: uId,
             name: name,
             email: email,
             dob: dob,
@@ -489,6 +528,7 @@ $(document).ready(function () {
 
     //set params to send to db
     function clientEditDetails(id) {
+        var uId = $("#addClientBtn").attr("value");
         var status = $("#status").val();
         var name = $("#nameEdit").val();
         var email = $("#emailEdit").val();
@@ -499,17 +539,18 @@ $(document).ready(function () {
         var payMethod = $("#payMethodEdit").val();
         var rate = $("#rateEdit").val();
         //send info to be added to database
-        editClient(id, status, name, email, dob, age, location, occupation, payMethod, rate)
+        editClient(uId, id, status, name, email, dob, age, location, occupation, payMethod, rate)
             //Update UI
         $("#editClientModal").modal("hide");
     }
 
     //Send edits for client to database
-    function editClient(id, status, name, email, dob, age, location, occupation, payMethod, rate) {
+    function editClient(uId, id, status, name, email, dob, age, location, occupation, payMethod, rate) {
         var key = $("#editClientProfile").attr("value");
         if (id === key) {
             var updates = {};
             var editedInfo = {
+                uId: uId,
                 status: status,
                 name: name,
                 email: email,
@@ -565,6 +606,7 @@ $(document).ready(function () {
     //Handle noteForm submission
     $("#noteForm").submit(function (event) {
         event.preventDefault();
+        var uId = $("#addNoteBtn").attr("value");
         var key = $("#addNote").attr("value");
         var clientName = $("#addNote").attr("name");
         var date = $("#date").val();
@@ -576,14 +618,15 @@ $(document).ready(function () {
         var amount = $("#amount").val() || null;
         var paySource = $("#paySource").val() || null;
         //Send info to be added to database
-        addNotes(key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
+        addNotes(uId, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
         //Update UI
         $("#notesModal").modal("hide");
     });
 
     //Add notes to database
-    function addNotes(key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource) {
+    function addNotes(uId, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource) {
         database.ref("notes/").push({
+            uId: uId,
             key: key,
             clientName: clientName,
             date: date,
@@ -607,8 +650,8 @@ $(document).ready(function () {
 
     //Edit Notes
     //select row by clicking button
-    $('#notesTable tbody').on('click', '#edit', function () {
-        var data = notesTable.row($(this).parents('tr')).data();
+    $("#notesTable tbody").on("click", "#edit", function () {
+        var data = notesTable.row($(this).parents("tr")).data();
         editNoteId = data[7];
         //filter notes to return note that was clicked
         var noteToEdit = notesFromDatabase.filter(function (note) {
@@ -627,15 +670,16 @@ $(document).ready(function () {
         $("#editPaySource").val(n.paySource || null);
         //call to handle form submission on click
         $("#editForm").submit(function (event) {
+            var uId = $("#addNoteBtn").attr("value");
             var key = $("#editNote").attr("value");
             var clientName = $("#editNote").attr("name");
             event.preventDefault();
-            sendNoteUpdates(noteId, key, clientName);
+            sendNoteUpdates(uId, noteId, key, clientName);
         });
     });
 
     //Handle editForm submission
-    function sendNoteUpdates(id, key, clientName) {
+    function sendNoteUpdates(uId, id, key, clientName) {
         var date = $("#editDate").val();
         var title = $("#editTitle").val();
         var keywords = $("#editKeywords").val() || null;
@@ -645,16 +689,17 @@ $(document).ready(function () {
         var amount = $("#editAmount").val() || null;
         var paySource = $("#editPaySource").val() || null;
         //Send info to be added to database
-        editNotes(id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
+        editNotes(uId, id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
         //Update UI
         $("#editModal").modal("hide");
     };
 
     //Update notes after edit
-    function editNotes(id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource) {
+    function editNotes(uId, id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource) {
         if (id === editNoteId) {
             var updates = {};
             var editedInfo = {
+                uId: uId,
                 key: key,
                 clientName: clientName,
                 date: date,
@@ -680,8 +725,8 @@ $(document).ready(function () {
     }
 
     //Delete Note
-    $('#notesTable tbody').on('click', '#delete', function () {
-        var data = notesTable.row($(this).parents('tr')).data();
+    $("#notesTable tbody").on("click", "#delete", function () {
+        var data = notesTable.row($(this).parents("tr")).data();
         id = data[7];
         key = data[1];
         var item = {};
@@ -798,10 +843,12 @@ $(document).ready(function () {
     //------------Managing Sticky Note ----------
 
     //save notes on enter and send to db
-    $('.stickyNote').keydown(function (e) {
+    $(".stickyNote").keydown(function (e) {
+        var uId = $("#stickyToggle").attr("value");
         var key = $("#editClientProfile").attr("value");
         if (e.keyCode == 13) {
             var updates = {
+                uId: uId,
                 notes: $(".stickyNote").val(),
                 key: key
             }
@@ -843,7 +890,8 @@ $(document).ready(function () {
 
     //select note to edit
     $("#paymentTable tbody").on("click", "#edit", function () {
-        var data = paymentTable.row($(this).parents('tr')).data();
+        var uId = $("#addClientBtn").attr("value");
+        var data = paymentTable.row($(this).parents("tr")).data();
         editPaymentId = data[4];
         //filter notes to return note that was clicked
         var noteToEdit = notesFromDatabase.filter(function (note) {
@@ -859,27 +907,28 @@ $(document).ready(function () {
         //call to handle form submission on click
         $("#paymentForm").submit(function (event) {
             event.preventDefault();
-            sendPaymentUpdates(noteId, n);
+            sendPaymentUpdates(uId, noteId, n);
         });
     });
 
     //Handle paymentForm submission
-    function sendPaymentUpdates(id, n) {
+    function sendPaymentUpdates(uId, id, n) {
         var paid = $("#updatePaid").val();
         var datePaid = $("#updateDatePaid").val() || "";
         var amount = $("#updateAmount").val() || "";
         var paySource = $("#updatePaySource").val() || "";
         //Send info to be added to database
-        editPayment(id, n, paid, datePaid, amount, paySource);
+        editPayment(uId, id, n, paid, datePaid, amount, paySource);
         //Update UI
         $("#payModal").modal("hide");
     };
 
-    function editPayment(id, n, paid, datePaid, amount, paySource) {
+    function editPayment(uId, id, n, paid, datePaid, amount, paySource) {
         if (id === editPaymentId) {
             var updates = {};
             var key = n.key
             var editedInfo = {
+                uId: uId,
                 key: key,
                 clientName: n.clientName,
                 date: n.date,
@@ -901,18 +950,15 @@ $(document).ready(function () {
             displayPayments();
         }
     }
+
+    //-----------Managing Users-------------
+    $(".dropdown").on("click", "#logout", function () {
+        firebase.auth().signOut().then(function () {
+            console.log("Sign-out successful.");
+        }, function (error) {
+            console.log("An error occurred");
+        });
+    })
+
     //end of document.ready
 });
-
-
-
-
-//Delete client
-
-//Edit client details
-
-//Delete note
-
-//Edit note details
-
-//Create client profile
