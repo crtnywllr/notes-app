@@ -347,19 +347,20 @@ $(document).ready(function () {
     $("#clientForm").submit(function (event) {
         event.preventDefault();
         var uId = $("#addClientBtn").attr("value");
-        var name = $("#name").val();
-        var email = $("#email").val();
-        var dob = $("#dob").val();
-        var age = $("#age").val();
-        var location = $("#location").val();
-        var occupation = $("#occupation").val();
-        var payMethod = $("#payMethod").val();
-        var rate = $("#rate").val();
+        var name = $("#name").val().trim();
+        var email = $("#email").val().trim();
+        var dob = $("#dob").val().trim();
+        var age = $("#age").val().trim();
+        var location = $("#location").val().trim();
+        var occupation = $("#occupation").val().trim();
+        var payMethod = $("#payMethod").val().trim();
+        var rate = $("#rate").val().trim();
         //send info to be added to database
         addClient(uId, name, email, dob, age, location, occupation, payMethod, rate);
         //Update UI
+        //$("#clientForm")[0].reset();
         $("#clientModal").modal("hide");
-        //$("#clientForm").empty();
+
     });
 
     //Add client to database
@@ -390,8 +391,7 @@ $(document).ready(function () {
             var found = $.inArray(key, sidebar)
             if (sidebar.length === 0 || found === -1) {
                 sidebar.push(key);
-                var html = "";
-                html += "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
+                var html = "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
                 if (client.client.status === "Active") {
                     $("#activeList").append(html);
                 } else {
@@ -401,14 +401,12 @@ $(document).ready(function () {
                 if (($("#activeList").find($("#" + key + "")).length > 0) && client.client.status === "Active") {
                     return;
                 } else if (($("#activeList").find($("#" + key + "")).length === 0) && client.client.status === "Active") {
-                    var html = "";
-                    html += "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
+                    var html = "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
                     $("#activeList").append(html);
                 } else if (($("#archiveList").find($("#" + key + "")).length > 0) && client.client.status === "Archive") {
                     return;
                 } else if (($("#archiveList").find($("#" + key + "")).length === 0) && client.client.status === "Archive") {
-                    var html = "";
-                    html += "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
+                    var html = "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
                     $("#archiveList").append(html);
                 }
             };
@@ -479,8 +477,9 @@ $(document).ready(function () {
     //pulling client details for profiles
     function showClientDetails(key) {
         $("#editClientProfile").attr("value", key)
-        clientList.filter(function (client) {
+        clientList.map(function (client) {
             if (client.id === key) {
+                var status = client.client.status;
                 $("#act").html("<strong>Status: </strong>" + client.client.status);
                 $("#eml").html("<strong>Email: </strong>" + client.client.email);
                 $("#loc").html("<strong>Location: </strong>" + client.client.location);
@@ -506,19 +505,19 @@ $(document).ready(function () {
     $("#editClientProfile").on("click", function (event) {
         event.preventDefault();
         var id = $("#editClientProfile").attr("value");
-        var client = clientList.filter(function (client) {
+        var clientArray = clientList.filter(function (client) {
             return client.id === id;
         })
-        var c = client[0].client;
+        var client = clientArray[0].client;
         //fill placeholders with current info
-        var name = $("#nameEdit").attr("value", c.name);
-        var email = $("#emailEdit").attr("value", c.email);
-        var dob = $("#dobEdit").attr("value", c.dob);
-        var age = $("#ageEdit").attr("value", c.age);
-        var location = $("#locationEdit").attr("value", c.location);
-        var occupation = $("#occupationEdit").attr("value", c.occupation);
-        var payMethod = $("#payMethodEdit").val(c.payMethod);
-        var rate = $("#rateEdit").val(c.rate);
+        var name = $("#nameEdit").attr("value", client.name);
+        var email = $("#emailEdit").attr("value", client.email);
+        var dob = $("#dobEdit").attr("value", client.dob);
+        var age = $("#ageEdit").attr("value", client.age);
+        var location = $("#locationEdit").attr("value", client.location);
+        var occupation = $("#occupationEdit").attr("value", client.occupation);
+        var payMethod = $("#payMethodEdit").val(client.payMethod);
+        var rate = $("#rateEdit").val(client.rate);
         //handle form submission
         $("#clientEditForm").submit(function (e) {
             e.preventDefault();
@@ -529,15 +528,15 @@ $(document).ready(function () {
     //set params to send to db
     function clientEditDetails(id) {
         var uId = $("#addClientBtn").attr("value");
-        var status = $("#status").val();
-        var name = $("#nameEdit").val();
-        var email = $("#emailEdit").val();
-        var dob = $("#dobEdit").val();
-        var age = $("#ageEdit").val();
-        var location = $("#locationEdit").val();
-        var occupation = $("#occupationEdit").val();
-        var payMethod = $("#payMethodEdit").val();
-        var rate = $("#rateEdit").val();
+        var status = $("#status").val().trim();
+        var name = $("#nameEdit").val().trim();
+        var email = $("#emailEdit").val().trim();
+        var dob = $("#dobEdit").val().trim();
+        var age = $("#ageEdit").val().trim();
+        var location = $("#locationEdit").val().trim();
+        var occupation = $("#occupationEdit").val().trim();
+        var payMethod = $("#payMethodEdit").val().trim();
+        var rate = $("#rateEdit").val().trim();
         //send info to be added to database
         editClient(uId, id, status, name, email, dob, age, location, occupation, payMethod, rate)
             //Update UI
@@ -609,17 +608,18 @@ $(document).ready(function () {
         var uId = $("#addNoteBtn").attr("value");
         var key = $("#addNote").attr("value");
         var clientName = $("#addNote").attr("name");
-        var date = $("#date").val();
-        var title = $("#title").val();
-        var keywords = $("#keywords").val() || null;
-        var notes = $("#notes").val();
-        var paid = $("#paid").val();
-        var datePaid = $("#datePaid").val() || null;
-        var amount = $("#amount").val() || null;
-        var paySource = $("#paySource").val() || null;
+        var date = $("#date").val().trim();
+        var title = $("#title").val().trim();
+        var keywords = $("#keywords").val().trim() || null;
+        var notes = $("#notes").val().trim();
+        var paid = $("#paid").val().trim();
+        var datePaid = $("#datePaid").val().trim() || null;
+        var amount = $("#amount").val().trim() || null;
+        var paySource = $("#paySource").val().trim() || null;
         //Send info to be added to database
         addNotes(uId, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
         //Update UI
+        //$("#noteForm textarea").val(" ");
         $("#notesModal").modal("hide");
     });
 
@@ -657,17 +657,17 @@ $(document).ready(function () {
         var noteToEdit = notesFromDatabase.filter(function (note) {
             return note.id === editNoteId;
         });
-        var n = noteToEdit[0].note;
+        var note = noteToEdit[0].note;
         var noteId = noteToEdit[0].id
             //update placeholders in modal
-        $("#editDate").attr("value", n.date);
-        $("#editTitle").attr("value", n.title);
-        $("#editKeywords").attr("value", n.keywords);
-        $("#editNotes").val(n.notes);
-        $("#editPaid").val(n.paid);
-        $("#editDatePaid").attr("value", n.datePaid || null);
-        $("#editAmount").attr("value", n.amount || null);
-        $("#editPaySource").val(n.paySource || null);
+        $("#editDate").attr("value", note.date);
+        $("#editTitle").attr("value", note.title);
+        $("#editKeywords").attr("value", note.keywords);
+        $("#editNotes").val(note.notes);
+        $("#editPaid").val(note.paid);
+        $("#editDatePaid").attr("value", note.datePaid || null);
+        $("#editAmount").attr("value", note.amount || null);
+        $("#editPaySource").val(note.paySource || null);
         //call to handle form submission on click
         $("#editForm").submit(function (event) {
             var uId = $("#addNoteBtn").attr("value");
@@ -680,14 +680,14 @@ $(document).ready(function () {
 
     //Handle editForm submission
     function sendNoteUpdates(uId, id, key, clientName) {
-        var date = $("#editDate").val();
-        var title = $("#editTitle").val();
-        var keywords = $("#editKeywords").val() || null;
-        var notes = $("#editNotes").val();
-        var paid = $("#editPaid").val();
-        var datePaid = $("#editDatePaid").val() || null;
-        var amount = $("#editAmount").val() || null;
-        var paySource = $("#editPaySource").val() || null;
+        var date = $("#editDate").val().trim();
+        var title = $("#editTitle").val().trim();
+        var keywords = $("#editKeywords").val().trim() || null;
+        var notes = $("#editNotes").val().trim();
+        var paid = $("#editPaid").val().trim();
+        var datePaid = $("#editDatePaid").val().trim() || null;
+        var amount = $("#editAmount").val().trim() || null;
+        var paySource = $("#editPaySource").val().trim() || null;
         //Send info to be added to database
         editNotes(uId, id, key, clientName, date, title, keywords, notes, paid, datePaid, amount, paySource);
         //Update UI
@@ -849,7 +849,7 @@ $(document).ready(function () {
         if (e.keyCode == 13) {
             var updates = {
                 uId: uId,
-                notes: $(".stickyNote").val(),
+                notes: $(".stickyNote").val().trim(),
                 key: key
             }
             database.ref("sticky-note/").child(key).update(updates);
@@ -913,10 +913,10 @@ $(document).ready(function () {
 
     //Handle paymentForm submission
     function sendPaymentUpdates(uId, id, n) {
-        var paid = $("#updatePaid").val();
-        var datePaid = $("#updateDatePaid").val() || "";
-        var amount = $("#updateAmount").val() || "";
-        var paySource = $("#updatePaySource").val() || "";
+        var paid = $("#updatePaid").val().trim();
+        var datePaid = $("#updateDatePaid").val().trim() || "";
+        var amount = $("#updateAmount").val().trim() || "";
+        var paySource = $("#updatePaySource").val().trim() || "";
         //Send info to be added to database
         editPayment(uId, id, n, paid, datePaid, amount, paySource);
         //Update UI

@@ -2,39 +2,28 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>NoteKeeper</title>
-
     <!-- Bootstrap Core CSS -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- MetisMenu CSS -->
     <link href="../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
-
     <!-- Template CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
-
     <!--Custom CSS-->
     <link href="../dist/css/style.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open Sans|Roboto" rel="stylesheet">
-
     <!-- Font Awesome -->
     <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
 </head>
 
 <body>
-
     <div id="wrapper">
-
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
@@ -47,7 +36,6 @@
                 <a class="navbar-brand" href="index.html">NoteKeeper</a>
             </div>
             <!-- /.navbar-header -->
-
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -85,7 +73,7 @@
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
-
+            <!-- Nav Sidebar -->
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
@@ -101,12 +89,9 @@
 
                                     </ul>
                                 </li>
-
                                 <li>
                                     <a href="#">Archive<span class="fa arrow"></span></a>
-                                    <ul id="archiveList" class="nav nav-third-level">
-
-                                    </ul>
+                                    <ul id="archiveList" class="nav nav-third-level"></ul>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -115,27 +100,24 @@
                             <a class="paymentShow" href=""><i class="fa fa-bank fa-fw"></i> Payments</a>
                         </li>
                     </ul>
+                    <!--/#side-menu -->
                 </div>
-                <!-- /.sidebar-collapse -->
+                <!-- /.sidebar-nav -->
             </div>
-            <!-- /.navbar-static-side -->
+            <!-- /.sidebar -->
         </nav>
+        <!--/Navigation-->
         <div id="page-wrapper">
             <div id="allClients">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Clients</h1>
-                    </div>
-                    <!-- /.col-lg-12 -->
+                <div class="row col-lg-12">
+                    <h1 class="page-header">Clients</h1>
                 </div>
-                <!--modal-->
                 <!-- Button trigger modal -->
                 <p id="addClientBtn">
                     <button class="btn btn-primary" data-toggle="modal" data-target="#clientModal">
                         Add Client
                     </button>
                 </p>
-
                 <!-- Modal -->
                 <div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -148,43 +130,42 @@
                                 </button>
                                 <h4 class="modal-title" id="myModalLabel">
                                 Client Profile
-                            </h4>
+                                </h4>
                             </div>
-
                             <!-- Modal Body -->
                             <div class="modal-body">
-
+                                <!--Client Form -->
                                 <form id="clientForm" role="form">
                                     <div class="form-group">
                                         <label for="name">Name:</label>
-                                        <input type="text" class="form-control" id="name" value="Courtney" placeholder="Name" />
+                                        <input type="text" class="form-control" id="name" placeholder="Name" />
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Email address:</label>
-                                        <input type="email" class="form-control" id="email" value="c@c.com" placeholder="Email" />
+                                        <input type="email" class="form-control" id="email" placeholder="Email" />
                                     </div>
                                     <div class="form-group">
                                         <label for="dob">Date of Birth:</label>
-                                        <input type="date" class="form-control" id="dob" value="12/20/85" placeholder="mm/dd/yy" />
+                                        <input type="date" class="form-control" id="dob" placeholder="mm/dd/yy" />
                                     </div>
                                     <div class="form-group">
                                         <label for="age">Age:</label>
-                                        <input type="number" class="form-control" id="age" value="30" placeholder="Age" />
+                                        <input type="number" class="form-control" id="age" placeholder="Age" />
                                     </div>
                                     <div class="form-group">
                                         <label for="location">Location:</label>
-                                        <input type="text" class="form-control" id="location" value="SLC" placeholder="Location" />
+                                        <input type="text" class="form-control" id="location" placeholder="Location" />
                                     </div>
                                     <div class="form-group">
                                         <label for="occupation">Occupation:</label>
-                                        <input type="text" class="form-control" id="occupation" value="Dev" placeholder="Occupation" />
+                                        <input type="text" class="form-control" id="occupation" placeholder="Occupation" />
                                     </div>
                                     <div class="input-group">
                                         <label for="paymentSource">Preferred Payment Method:</label>
                                         <select id="payMethod" data-placeholder=" " class="form-control chosen-select">
                                             <option value="">
-                                            </option>" />
-                                            <option value="Paypal" selected>
+                                            </option>" selected/>
+                                            <option value="Paypal">
                                                 Paypal
                                             </option>" />
                                             <option value="Bitcoin">
@@ -203,16 +184,13 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="payRate">Session Rate:</label>
-                                        <input type="number" class="form-control" id="rate" value="40" placeholder="Rate" />
+                                        <input type="number" class="form-control" id="rate" placeholder="Rate" />
                                     </div>
                                     <button type="submit" id="addClient" class="btn btn-primary">Add Client</button>
-
-
                                 </form>
-
-
+                                <!--/#clientForm-->
                             </div>
-
+                            <!--/.modal-body-->
                             <!-- Modal Footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -223,73 +201,62 @@
                     </div>
                 </div>
                 <!--/modal-->
-                <!-- /.row -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default tableHeading">
-                            <div class="panel-heading ">
-                                All
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <div class="dataTable_wrapper">
-                                    <table class="table table-striped table-bordered table-hover" id="allClientsTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Key</th>
-                                                <th>Status</th>
-                                                <th>Last Session</th>
-                                                <th>No. of Sessions</th>
-                                                <th>Payment Method</th>
-                                                <th>Session Rate ($)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!--added clients go here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.table-responsive -->
-
-                            </div>
-                            <!-- /.panel-body -->
+                <div class="row col-lg-12">
+                    <div class="panel panel-default tableHeading">
+                        <div class="panel-heading ">
+                            All
                         </div>
-                        <!-- /.panel -->
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover" id="allClientsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Key</th>
+                                            <th>Status</th>
+                                            <th>Last Session</th>
+                                            <th>No. of Sessions</th>
+                                            <th>Payment Method</th>
+                                            <th>Session Rate ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--added clients go here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.dataTable_wrapper -->
+                        </div>
+                        <!-- /.panel-body -->
                     </div>
-                    <!-- /.col-lg-12 -->
+                    <!-- /.panel -->
                 </div>
                 <!-- /.row -->
             </div>
             <!-- /#allClients -->
-
+            <!--Single Client Display-->
             <div id="singleClient">
                 <div class="col-md-4" text-center>
                     <a href=""><h2 id="clientNameDisplay"></h2></a>
                 </div>
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <div>
-                            <h2 id="noteTitle"><!--Session title--></h2>
-                        </div>
+                <div class="row"></div>
+                <div class="col-lg-12 text-center">
+                    <div>
+                        <h2 id="noteTitle"><!--Session title--></h2>
                     </div>
                 </div>
-                <!-- /.col-lg-12 -->
-
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2 text-justify">
                         <pre id="noteContent"></pre>
                     </div>
                 </div>
-
-                <!--modal-->
                 <!-- Button trigger modal -->
                 <p id="addNoteBtn">
                     <button id="noteModalToggle" class="btn btn-primary" data-toggle="modal" data-target="#notesModal">
                         Add Notes
                     </button>
                 </p>
-
                 <!-- Modal -->
                 <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -302,34 +269,32 @@
                                 </button>
                                 <h4 class="modal-title" id="notesModalLabel">
                                 Session Notes
-                            </h4>
+                                </h4>
                             </div>
-
                             <!-- Modal Body -->
                             <div class="modal-body">
+                                <!--Note Form -->
                                 <form id="noteForm" role="form">
                                     <div class="form-group">
                                         <label for="date">Date:</label>
-                                        <input value="6/16/16" type="date" class="form-control" id="date" placeholder="mm/dd/yy" required/>
+                                        <input type="date" class="form-control" id="date" placeholder="mm/dd/yy" required/>
                                     </div>
                                     <div class="form-group">
                                         <label for="title">Title:</label>
-                                        <input value="Session 1" type="text" class="form-control" id="title" placeholder="Title" required/>
+                                        <input type="text" class="form-control" id="title" placeholder="Title" required/>
                                     </div>
                                     <div class="form-group">
                                         <label for="keywords">Keywords:</label>
-                                        <input value="Keywords" type="text" class="form-control" id="keywords" placeholder="Keywords" required/>
+                                        <input type="text" class="form-control" id="keywords" placeholder="Keywords" required/>
                                     </div>
                                     <div class="form-group">
                                         <label for="notes">Notes:</label>
-                                        <textarea value="Notes" rows="5" class="form-control" id="notes" placeholder="Notes" required></textarea>
+                                        <textarea rows="5" class="form-control" id="notes" placeholder="Notes" required></textarea>
                                     </div>
                                     <div class="input-group">
                                         <label for="paymentStatus">Paid:</label>
                                         <select id="paid" data-placeholder=" " class="form-control chosen-select" required>
-                                            <option value="">
-                                            </option>" />
-                                            <option value="Yes" selected>
+                                            <option value="Yes">
                                                 Yes
                                             </option>" />
                                             <option value="No">
@@ -339,18 +304,18 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="datePaid">Date Paid:</label>
-                                        <input value=" " type="date" class="form-control" id="datePaid" placeholder="mm/dd/yy" />
+                                        <input type="date" class="form-control" id="datePaid" placeholder="mm/dd/yy" />
                                     </div>
                                     <div class="form-group">
                                         <label for="amount">Payment Amount:</label>
-                                        <input value=" " type="date" class="form-control" id="amount" placeholder="" />
+                                        <input type="date" class="form-control" id="amount" placeholder="" />
                                     </div>
                                     <div class="input-group">
                                         <label for="paymentMethod">Payment Method:</label>
                                         <select id="paySource" data-placeholder=" " class="form-control chosen-select">
                                             <option value="">
-                                            </option>" />
-                                            <option value="Paypal" selected>
+                                            </option>" selected/>
+                                            <option value="Paypal">
                                                 Paypal
                                             </option>" />
                                             <option value="Bitcoin">
@@ -369,10 +334,9 @@
                                     </div>
                                     <button type="submit" id="addNote" class="btn btn-primary">Add Notes</button>
                                 </form>
-
-
+                                <!--/#noteForm-->
                             </div>
-
+                            <!--/.modal-body-->
                             <!-- Modal Footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -380,9 +344,12 @@
                                 </button>
                             </div>
                         </div>
+                        <!--/.modal-content-->
                     </div>
+                    <!--/.modal-dialog-->
                 </div>
                 <!--/modal-->
+                <!--Note Edit Modal-->
                 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -396,9 +363,9 @@
                                     Session Notes
                                 </h4>
                             </div>
-
                             <!-- Modal Body -->
                             <div class="modal-body">
+                                <!--Note Edit Form -->
                                 <form id="editForm" role="form">
                                     <div class="form-group">
                                         <label for="date">Date:</label>
@@ -419,8 +386,6 @@
                                     <div class="input-group">
                                         <label for="paymentStatus">Paid:</label>
                                         <select id="editPaid" data-placeholder=" " class="form-control chosen-select" required>
-                                            <option value="">
-                                            </option>" />
                                             <option value="Yes">
                                                 Yes
                                             </option>" />
@@ -441,7 +406,7 @@
                                         <label for="paymentMethod">Payment Method:</label>
                                         <select id="editPaySource" data-placeholder=" " class="form-control chosen-select">
                                             <option value="">
-                                            </option>" />
+                                            </option>" selected/>
                                             <option value="Paypal">
                                                 Paypal
                                             </option>" />
@@ -461,10 +426,9 @@
                                     </div>
                                     <button type="submit" id="editNote" class="btn btn-primary">Submit Changes</button>
                                 </form>
-
-
+                                <!--/#editForm-->
                             </div>
-
+                            <!--.modal-body-->
                             <!-- Modal Footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -472,172 +436,48 @@
                                 </button>
                             </div>
                         </div>
+                        <!--/modal-content-->
                     </div>
+                    <!--/modal-dialog-->
                 </div>
                 <!--/modal-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default tableHeading">
-                            <div class="panel-heading ">
-                                Session Notes
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <div class="dataTable_wrapper">
-                                    <table class="table table-striped table-bordered table-hover" id="notesTable" style="width: 100%">
-                                        <thead>
-                                            <tr>
-                                                <th> </th>
-                                                <th>Client Key</th>
-                                                <th>Title</th>
-                                                <th>Date</th>
-                                                <th>Keywords</th>
-                                                <th>Paid</th>
-                                                <th>Payment Date</th>
-                                                <th>Key</th>
-                                                <th> </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="notesTableBody">
-                                            <!--added notes go here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.table-responsive -->
-
-                            </div>
-                            <!-- /.panel-body -->
+                <div class="row col-lg-12">
+                    <div class="panel panel-default tableHeading">
+                        <div class="panel-heading ">
+                            Session Notes
                         </div>
-                        <!-- /.panel -->
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover" id="notesTable" style="width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th> </th>
+                                            <th>Client Key</th>
+                                            <th>Title</th>
+                                            <th>Date</th>
+                                            <th>Keywords</th>
+                                            <th>Paid</th>
+                                            <th>Payment Date</th>
+                                            <th>Key</th>
+                                            <th> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="notesTableBody">
+                                        <!--added notes go here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.dataTable_wrapper -->
+                        </div>
+                        <!-- /.panel-body -->
                     </div>
-                    <!-- /.col-lg-12 -->
+                    <!-- /.panel -->
                 </div>
                 <!-- /.row -->
             </div>
-            <!-- /singleClient -->
-            <div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                                <span class="sr-only">Close</span>
-                            </button>
-                            <h4 class="modal-title" id="payModalLabel">
-                                Update Payment
-                            </h4>
-                        </div>
-
-
-                        <!-- Modal Body -->
-                        <div class="modal-body">
-                            <form id="paymentForm" role="form">
-                                <div class="input-group">
-                                    <label for="paymentStatus">Paid:</label>
-                                    <select id="updatePaid" data-placeholder=" " class="form-control chosen-select" required>
-                                        <option value="">
-                                        </option>" />
-                                        <option value="Yes" selected>
-                                            Yes
-                                        </option>" />
-                                        <option value="No">
-                                            No
-                                        </option>" />
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="datePaid">Date Paid:</label>
-                                    <input value=" " type="date" class="form-control" id="updateDatePaid" placeholder="mm/dd/yy" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="amount">Payment Amount:</label>
-                                    <input value=" " type="date" class="form-control" id="updateAmount" placeholder="" />
-                                </div>
-                                <div class="input-group">
-                                    <label for="paymentMethod">Payment Method:</label>
-                                    <select id="updatePaySource" data-placeholder=" " class="form-control chosen-select">
-                                        <option value="">
-                                        </option>" />
-                                        <option value="Paypal" selected>
-                                            Paypal
-                                        </option>" />
-                                        <option value="Bitcoin">
-                                            Bitcoin
-                                        </option>" />
-                                        <option value="Bank Transfer">
-                                            Bank Transfer
-                                        </option>" />
-                                        <option value="Cash">
-                                            Cash
-                                        </option>" />
-                                        <option value="Check">
-                                            Check
-                                        </option>" />
-                                    </select>
-                                </div>
-                                <button type="submit" id="payUpdate" class="btn btn-primary">Update Payment Info</button>
-                            </form>
-                        </div>
-
-                        <!-- Modal Footer -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="payments">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Payments</h1>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-                <!-- /.row -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default tableHeading">
-                            <div class="panel-heading ">
-                                All Payments
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <div class="dataTable_wrapper">
-                                    <table class="table table-striped table-bordered table-hover" id="paymentTable" style="width: 100%">
-                                        <thead>
-                                            <tr>
-                                                <th> </th>
-                                                <th>Client</th>
-                                                <th>Key</th>
-                                                <th>Session</th>
-                                                <th>Note Id</th>
-                                                <th>Session Date</th>
-                                                <th>Paid</th>
-                                                <th>Payment Date</th>
-                                                <th>Payment Method</th>
-                                                <th>Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- payment content goes here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.table-responsive -->
-
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-                        <!-- /.panel -->
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-                <!-- /.row -->
-            </div>
-            <!-- payments -->
+            <!-- /#singleClient -->
+            <!--Client Profile -->
             <div id="clientProfile">
                 <!--Modal-->
                 <div class="modal fade" id="editClientModal" tabindex="-1" role="dialog" aria-labelledby="clientProfileModalLabel" aria-hidden="true">
@@ -653,15 +493,14 @@
                                     Client Profile
                                 </h4>
                             </div>
-
                             <!-- Modal Body -->
                             <div class="modal-body">
-
+                                <!--Edit Client Form -->
                                 <form id="clientEditForm" role="form">
                                     <div class="input-group">
                                         <label for="status">Status:</label>
                                         <select id="status" data-placeholder=" " class="form-control chosen-select" required>
-                                            <option value="Active" selected>
+                                            <option value="Active">
                                                 Active
                                             </option>" />
                                             <option value="Archive">
@@ -697,7 +536,7 @@
                                         <label for="paymentSource">Preferred Payment Method:</label>
                                         <select id="payMethodEdit" data-placeholder=" " class="form-control chosen-select">
                                             <option value="">
-                                            </option>" />
+                                            </option>" selected/>
                                             <option value="Paypal">
                                                 Paypal
                                             </option>" />
@@ -720,13 +559,10 @@
                                         <input type="number" class="form-control" id="rateEdit" placeholder="Rate" />
                                     </div>
                                     <button type="submit" id="editClient" class="btn btn-primary">Update Client Details</button>
-
-
                                 </form>
-
-
+                                <!--/#clientEditForm-->
                             </div>
-
+                            <!--/.modal-body-->
                             <!-- Modal Footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -734,16 +570,17 @@
                                 </button>
                             </div>
                         </div>
+                        <!--/.modal-content-->
                     </div>
+                    <!--/.modal-dialog-->
                 </div>
-                <!--end modal-->
+                <!--/modal-->
                 <div class="row">
                     <div class="col-md-6">
                         <div class="panel detailsPanel">
                             <div class="panel-heading detailsHeading">
                                 <div class="row">
                                     <div class="col-md-8"><a href=""><h2 id="clientProfileName"></h2></a> </div>
-
                                     <div class="col-md-2 pull-right">
                                         <i data-toggle="modal" data-target="#editClientModal" id="editClientProfile" class="fa fa-2x fa-pencil"></i>
                                     </div>
@@ -763,6 +600,7 @@
                             </div>
                         </div>
                     </div>
+                    <!--/details-->
                     <div class="col-md-3 col-md-offset-2 extraInfo">
                         <div class="col-xs-12 history">
                             <h3>Session History</h3>
@@ -789,36 +627,151 @@
                             <textarea name="stickyNote" class="stickyNote" cols="30" rows="10"></textarea>
                         </div>
                     </div>
+                    <!--/.extraInfo-->
                 </div>
                 <!--/client details-->
-                <!--delete client -->
-                <div class="row">
-                    <div class="panel panel-default deleteClientPanel col-md-4">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                            <a href="#" data-target="#collapseOne" data-toggle="collapse">Delete Client</a>
-                        </h4>
-                        </div>
-                        <div class="panel-collapse collapse" id="collapseOne">
-                            <div class="panel-body">
-                                <h4>Are you sure? All notes and information for this client will be deleted permanently.</h4>
-                                <div class="row text-center">
-                                    <button class="btn btn-default" id="deleteClient">Delete</button>
-                                    <button class="btn" href="#" data-target="#collapseOne" data-toggle="collapse">Close</button>
-                                </div>
+                <!--Delete Client -->
+                <div class="row panel panel-default deleteClientPanel col-md-4">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                                <a href="#" data-target="#collapseOne" data-toggle="collapse">Delete Client</a>
+                            </h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="collapseOne">
+                        <div class="panel-body">
+                            <h4>Are you sure? All notes and information for this client will be deleted permanently.</h4>
+                            <div class="row text-center">
+                                <button class="btn btn-default" id="deleteClient">Delete</button>
+                                <button class="btn" href="#" data-target="#collapseOne" data-toggle="collapse">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!--/delete client-->
             </div>
-            <!--client profile-->
+            <!--/client profile-->
+            <!--Payments-->
+            <div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="payModalLabel">
+                                Update Payment
+                            </h4>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <!--Payment Form -->
+                            <form id="paymentForm" role="form">
+                                <div class="input-group">
+                                    <label for="paymentStatus">Paid:</label>
+                                    <select id="updatePaid" data-placeholder=" " class="form-control chosen-select" required>
+                                        <option value="Yes">
+                                            Yes
+                                        </option>" />
+                                        <option value="No">
+                                            No
+                                        </option>" />
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="datePaid">Date Paid:</label>
+                                    <input value=" " type="date" class="form-control" id="updateDatePaid" placeholder="mm/dd/yy" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="amount">Payment Amount:</label>
+                                    <input value=" " type="date" class="form-control" id="updateAmount" placeholder="" />
+                                </div>
+                                <div class="input-group">
+                                    <label for="paymentMethod">Payment Method:</label>
+                                    <select id="updatePaySource" data-placeholder=" " class="form-control chosen-select">
+                                        <option value="">
+                                        </option>" selected/>
+                                        <option value="Paypal">
+                                            Paypal
+                                        </option>" />
+                                        <option value="Bitcoin">
+                                            Bitcoin
+                                        </option>" />
+                                        <option value="Bank Transfer">
+                                            Bank Transfer
+                                        </option>" />
+                                        <option value="Cash">
+                                            Cash
+                                        </option>" />
+                                        <option value="Check">
+                                            Check
+                                        </option>" />
+                                    </select>
+                                </div>
+                                <button type="submit" id="payUpdate" class="btn btn-primary">Update Payment Info</button>
+                            </form>
+                            <!--/#paymentForm-->
+                        </div>
+                        <!--/.modal-body-->
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                    <!--/.modal-content-->
+                </div>
+                <!--/.modal-dialog-->
+            </div>
+            <!--/.modal-->
+            <!--Payments Table -->
+            <div id="payments">
+                <div class="row col-lg-12">
+                    <h1 class="page-header">Payments</h1>
+                </div>
+                <div class="row col-lg-12">
+                    <div class="panel panel-default tableHeading">
+                        <div class="panel-heading ">
+                            All Payments
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover" id="paymentTable" style="width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th> </th>
+                                            <th>Client</th>
+                                            <th>Key</th>
+                                            <th>Session</th>
+                                            <th>Note Id</th>
+                                            <th>Session Date</th>
+                                            <th>Paid</th>
+                                            <th>Payment Date</th>
+                                            <th>Payment Method</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- payment content goes here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.dataTable_wrapper -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- payments -->
         </div>
         <!-- page-wrapper -->
-
     </div>
     <!-- /#wrapper -->
-
     <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
     <script>
         // Initialize Firebase
@@ -831,34 +784,19 @@
         firebase.initializeApp(config);
         var database = firebase.database();
     </script>
-
-
     <!-- jQuery -->
     <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
     <!-- Metis Menu Plugin JavaScript -->
     <script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
-
     <!-- DataTables JavaScript -->
     <script src="../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-
-    <!-- MomentJS -->
-    <script src="../dist/js/moment.js"></script>
-
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
-
-    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <script>
-    </script>
-
     <!-- Custom Js -->
     <script src="../js/clients.js"></script>
-
 </body>
 
 </html>
