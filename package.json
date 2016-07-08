@@ -1,0 +1,24 @@
+{
+  "name": "notes-app",
+  "version": "1.0.0",
+  "description": "Note taking application for therapists.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crtnywllr/notes-app.git"
+  },
+  "author": "Courtney Waller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crtnywllr/notes-app/issues"
+  },
+  "homepage": "https://github.com/crtnywllr/notes-app#readme",
+  "dependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "webpack": "^1.13.1"
+  }
+}

@@ -4,8 +4,6 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         uId = user.uid;
         $(location).attr("href", "index.html");
-    } else {
-        console.log("no users signed in");
     }
 });
 
@@ -19,7 +17,13 @@ $("#loginForm").submit(function (e) {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage);
-        $("#errorDisplay").text("There was an error with your email or password. Please try again.")
+        if (errorCode === "auth/user-not-found") {
+            $("#errorDisplay").text("No account found for that email address. Please try again or register below.")
+        } else if (errorCode === "auth/wrong-password") {
+            $("#errorDisplay").text("Incorrect password. Please try again.")
+        } else {
+            $("#errorDisplay").text(errorMessage);
+        }
     });
 })
 
