@@ -4,21 +4,32 @@ function showClientDetails(key) {
     $("#editClientProfile").attr("value", key)
     clientList.map(function (client) {
         if (client.id === key) {
-            var status = client.client.status;
-            $("#act").html("<strong>Status: </strong>" + client.client.status);
-            $("#eml").html("<strong>Email: </strong>" + client.client.email);
-            $("#loc").html("<strong>Location: </strong>" + client.client.location);
-            $("#occ").html("<strong>Occupation: </strong>" + client.client.occupation);
-            $("#DOB").html("<strong>Date of Birth: </strong>" + client.client.dob);
-            $("#Age").html("<strong>Age: </strong>" + client.client.age);
-            $("#pay").html("<strong>Preferred Payment Method: </strong>" + client.client.payMethod);
-            $("#fee").html("<strong>Session Rate: </strong>" + client.client.rate);
+            var status = $("#act");
+            var email = $("#eml");
+            var location = $("#loc");
+            var occupation = $("#occ");
+            var dob = $("#DOB");
+            var age = $("#Age");
+            var payment = $("#pay");
+            var rate = $("#fee");
+            var first = $("#first");
+            var last = $("#last");
+            var total = $("#total");
+            var unpaid = $("#unpaid");
+            status.html("<strong>Status: </strong>" + client.client.status);
+            email.html("<strong>Email: </strong>" + client.client.email);
+            location.html("<strong>Location: </strong>" + client.client.location);
+            occupation.html("<strong>Occupation: </strong>" + client.client.occupation);
+            dob.html("<strong>Date of Birth: </strong>" + client.client.dob);
+            age.html("<strong>Age: </strong>" + client.client.age);
+            payment.html("<strong>Preferred Payment Method: </strong>" + client.client.payMethod);
+            rate.html("<strong>Session Rate: </strong>" + client.client.rate);
             var noteData = getData(key);
             var html = "";
-            $("#first").html("<li><strong>First Session: </strong>" + noteData.firstSession + "</li>");
-            $("#last").html("<li><strong>Most Recent Session: </strong>" + noteData.lastSession + "</li>");
-            $("#total").html("<li><strong>Number of Sessions: </strong>" + noteData.totalSessions + "</li>");
-            $("#unpaid").html("<li><strong><a href='' class='paymentShow'>Unpaid Sessions: </a></strong>" + noteData.unpaidSessions + " (" + noteData.numUnpaid + ")</li>");
+            first.html("<li><strong>First Session: </strong>" + noteData.firstSession + "</li>");
+            last.html("<li><strong>Most Recent Session: </strong>" + noteData.lastSession + "</li>");
+            total.html("<li><strong>Number of Sessions: </strong>" + noteData.totalSessions + "</li>");
+            unpaid.html("<li><strong><a href='' class='paymentShow'>Unpaid Sessions: </a></strong>" + noteData.unpaidSessions + " (" + noteData.numUnpaid + ")</li>");
         } else {
             return;
         }
