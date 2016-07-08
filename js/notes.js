@@ -51,6 +51,7 @@ function addNotes(uId, key, clientName, date, title, keywords, notes, paid, date
 $("#notesTable tbody").on("click", "#edit", function () {
     var data = notesTable.row($(this).parents("tr")).data();
     editNoteId = data[7];
+    $("#editNote").attr("name", editNoteId);
     //filter notes to return note that was clicked
     var noteToEdit = notesFromDatabase.filter(function (note) {
         return note.id === editNoteId;
@@ -66,14 +67,16 @@ $("#notesTable tbody").on("click", "#edit", function () {
     $("#editDatePaid").attr("value", note.datePaid || null);
     $("#editAmount").attr("value", note.amount || null);
     $("#editPaySource").val(note.paySource || null);
-    //call to handle form submission on click
-    $("#editForm").submit(function (event) {
-        var uId = $("#addNoteBtn").attr("value");
-        var key = $("#editNote").attr("value");
-        var clientName = $("#editNote").attr("name");
-        event.preventDefault();
-        sendNoteUpdates(uId, noteId, key, clientName);
-    });
+});
+
+//call to handle edit note form submission on click
+$("#editForm").submit(function (event) {
+    event.preventDefault();
+    var id = $("#editNote").attr("name");
+    var uId = $("#addNoteBtn").attr("value");
+    var key = $("#editNote").attr("value");
+    var clientName = $("#clientNameDisplay").text();
+    sendNoteUpdates(uId, id, key, clientName);
 });
 
 //Handle editForm submission
@@ -125,15 +128,21 @@ function editNotes(uId, id, key, clientName, date, title, keywords, notes, paid,
 //Delete Note
 $("#notesTable tbody").on("click", "#delete", function () {
     var data = notesTable.row($(this).parents("tr")).data();
-    id = data[7];
-    key = data[1];
+    var id = data[7];
+    var key = data[1];
     var item = {};
     item["notes/" + id] = id;
     database.ref("notes/").child(id).remove();
     //update client's list of notes
+    var clientNotes = notesFromDatabase.filter(function (note) {
+        return (key === note.note.key);
+    });
+    var i = (clientNotes.length - 1);
+    var lastSession = clientNotes[i];
+    key = lastSession.note.key;
     singleClientDisplay(key);
     //update note in slideshow if it was selected
-    noteDisplay();
+    noteDisplay(key);
     //change number of notes on client table
     updateClientTable();
     //change history of notes for payment table

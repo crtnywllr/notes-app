@@ -3,6 +3,7 @@ var notesTable;
 var paymentTable;
 var editNoteId;
 var editPaymentId;
+var noteToEdit;
 var uId;
 
 var sidebar = [];

@@ -54,11 +54,13 @@ $("#editClientProfile").on("click", function (event) {
     var occupation = $("#occupationEdit").attr("value", client.occupation);
     var payMethod = $("#payMethodEdit").val(client.payMethod);
     var rate = $("#rateEdit").val(client.rate);
-    //handle form submission
-    $("#clientEditForm").submit(function (e) {
-        e.preventDefault();
-        clientEditDetails(id);
-    })
+});
+
+//handle form submission
+$("#clientEditForm").submit(function (e) {
+    var id = $("#editClientProfile").attr("value");
+    e.preventDefault();
+    clientEditDetails(id);
 });
 
 //set params to send to db

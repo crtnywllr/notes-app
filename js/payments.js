@@ -22,7 +22,7 @@ $("#paymentTable tbody").on("click", "#edit", function () {
     var data = paymentTable.row($(this).parents("tr")).data();
     editPaymentId = data[4];
     //filter notes to return note that was clicked
-    var noteToEdit = notesFromDatabase.filter(function (note) {
+    noteToEdit = notesFromDatabase.filter(function (note) {
         return note.id === editPaymentId;
     });
     var n = noteToEdit[0].note;
@@ -32,12 +32,16 @@ $("#paymentTable tbody").on("click", "#edit", function () {
     $("#updateDatePaid").attr("value", n.datePaid || null);
     $("#updateAmount").attr("value", n.amount || null);
     $("#updatePaySource").val(n.paySource || null);
-    //call to handle form submission on click
-    $("#paymentForm").submit(function (event) {
-        event.preventDefault();
-        sendPaymentUpdates(uId, noteId, n);
-    });
 });
+
+//call to handle form submission on click
+$("#paymentForm").submit(function (event) {
+    event.preventDefault();
+    var n = noteToEdit[0].note;
+    var noteId = noteToEdit[0].id;
+    sendPaymentUpdates(uId, noteId, n);
+});
+
 
 //Handle paymentForm submission
 function sendPaymentUpdates(uId, id, n) {
