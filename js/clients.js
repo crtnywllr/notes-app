@@ -57,12 +57,12 @@ function updateSidebar(id) {
         } else {
             if (($("#activeList").find($("#" + key + "")).length > 0) && client.client.status === "Active") {
                 return;
-            } else if (($("#activeList").find($("#" + key + "")).length === 0) && client.client.status === "Active") {
+            } else if (client.client.status === "Active") {
                 var html = "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
                 $("#activeList").append(html);
-            } else if (($("#archiveList").find($("#" + key + "")).length > 0) && client.client.status === "Archive") {
+            } else if ($("#archiveList").find($("#" + key + "")).length) {
                 return;
-            } else if (($("#archiveList").find($("#" + key + "")).length === 0) && client.client.status === "Archive") {
+            } else if (client.client.status === "Archive") {
                 var html = "<li><a id='" + key + "' href=''>" + client.client.name + "</a></li>"
                 $("#archiveList").append(html);
             }
