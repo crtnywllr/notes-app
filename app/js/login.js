@@ -4,7 +4,7 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             uId = user.uid;
-            $(location).attr("href", "index.html");
+            $(location).attr("href", "app/pages/index.html");
         }
     });
 
