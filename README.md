@@ -1,6 +1,9 @@
 # Note Keeper
 
-**Live demo**: (https://limitless-reef-83019.herokuapp.com)
+**Live demo**: (https://notekeeper-b377d.firebaseapp.com)
+-Login info:
+    Email: demo@testing.com
+    Password: test1234
 
 **Purpose:**  This was my final project for Thinkful's Career Path bootcamp. I wanted to try to create an environment mimicking a work setting where I might receive design and back-end structure from others and need to add front end functionality, so I chose to use a template and Firebase as my starting structure. This taught me exactly what I wanted it to - how to solve errors on my own and using Google and how to tease what I need out of sometimes unclear documentation.
 
