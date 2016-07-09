@@ -5,7 +5,7 @@ clientTable = $("#allClientsTable").DataTable({
     responsive: true,
     "columnDefs": [
         {
-            "width": "20%",
+            "width": "24%",
             "render": function (data, type, row) {
                 return "<a class='clientLink' href='' value='" + row[1] + "' name= '" + row[0] + "'>" + row[0] + "</a>";
             },
